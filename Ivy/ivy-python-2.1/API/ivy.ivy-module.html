@@ -1,0 +1,759 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>ivy.ivy</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ivy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.tls.cena.fr/products/ivy/">ivy-python: a python library for the Ivy software bus</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="ivy-module.html">Package&nbsp;ivy</a> ::
+        Module&nbsp;ivy
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="ivy.ivy-module.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== MODULE DESCRIPTION ==================== -->
+<h1 class="epydoc">Module ivy</h1><p class="nomargin-top"><span class="codelink"><a href="ivy.ivy-pysrc.html">source&nbsp;code</a></span></p>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-using-an-ivyserver" name="rst-using-an-ivyserver">Using an IvyServer</a></h1>
+<p>The following code is a typical example of use:</p>
+<pre class="py-doctest">
+<span class="py-keyword">from</span> ivy.ivy <span class="py-keyword">import</span> IvyServer
+
+<span class="py-keyword">class</span> <span class="py-defname">MyAgent</span>(IvyServer):
+  <span class="py-keyword">def</span> <span class="py-defname">__init__</span>(self, name):
+    IvyServer.__init__(self,<span class="py-string">'MyAgent'</span>)
+    self.name = name
+    self.start(<span class="py-string">'127.255.255.255:2010'</span>)
+    self.bind_msg(self.handle_hello, <span class="py-string">'hello .*'</span>)
+    self.bind_msg(self.handle_button, <span class="py-string">'BTN ([a-fA-F0-9]+)'</span>)
+
+  <span class="py-keyword">def</span> <span class="py-defname">handle_hello</span>(self, agent):
+    <span class="py-keyword">print</span> <span class="py-string">'[Agent %s] GOT hello from %r'</span>%(self.name, agent)
+
+  <span class="py-keyword">def</span> <span class="py-defname">handle_button</span>(self, agent, btn_id):
+    <span class="py-keyword">print</span> <span class="py-string">'[Agent %s] GOT BTN button_id=%s from %r'</span>%(self.name, btn_id, agent)
+    <span class="py-comment"># let's answer!</span>
+    self.send_msg(<span class="py-string">'BTN_ACK %s'</span>%btn_id)
+
+a=MyAgent(<span class="py-string">'007'</span>)</pre>
+</div>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-implementation-details" name="rst-implementation-details">Implementation details</a></h1>
+<p>An Ivy client is made of several threads:</p>
+<blockquote>
+<ul class="rst-simple">
+<li>an <a href="ivy.ivy.IvyServer-class.html" class="link">IvyServer</a> instance</li>
+<li>a UDP server, lanched by the Ivy server, listening to incoming UDP
+broadcast messages</li>
+<li><a href="ivy.ivy.IvyTimer-class.html" class="link">IvyTimer</a> objects</li>
+</ul>
+</blockquote>
+<p>Copyright (c) 2005-2008 Sebastien Bigaret &lt;<a class="rst-reference" href="mailto:sbigaret&#64;users.sourceforge.net" target="_top">sbigaret&#64;users.sourceforge.net</a>&gt;</p>
+</div>
+
+<!-- ==================== CLASSES ==================== -->
+<a name="section-Classes"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Classes</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Classes"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ivy.ivy.IvyProtocolError-class.html" class="summary-name">IvyProtocolError</a>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ivy.ivy.IvyMalformedMessage-class.html" class="summary-name">IvyMalformedMessage</a>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ivy.ivy.IvyIllegalStateError-class.html" class="summary-name">IvyIllegalStateError</a>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ivy.ivy.IvyClient-class.html" class="summary-name">IvyClient</a><br />
+      Represents a client connected to the bus.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ivy.ivy.IvyServer-class.html" class="summary-name">IvyServer</a><br />
+      An Ivy server is responsible for receiving and handling the messages
+that other clients send on an Ivy bus to a given agent.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ivy.ivy.IvyHandler-class.html" class="summary-name">IvyHandler</a><br />
+      An IvyHandler is associated to one IvyClient connected to our server.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ivy.ivy.IvyTimer-class.html" class="summary-name">IvyTimer</a><br />
+      An IvyTimer object is responsible for calling a function regularly.
+    </td>
+  </tr>
+</table>
+<!-- ==================== FUNCTIONS ==================== -->
+<a name="section-Functions"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Functions</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Functions"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="trace"></a><span class="summary-sig-name">trace</span>(<span class="summary-sig-arg">*args</span>,
+        <span class="summary-sig-arg">**kw</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#trace">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="void_function"></a><span class="summary-sig-name">void_function</span>(<span class="summary-sig-arg">*arg</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      A function that accepts any number of parameters and does nothing</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#void_function">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy-module.html#UDP_init_and_listen" class="summary-sig-name">UDP_init_and_listen</a>(<span class="summary-sig-arg">broadcast_addr</span>,
+        <span class="summary-sig-arg">port</span>,
+        <span class="summary-sig-arg">socket_server</span>)</span><br />
+      Called by an IvyServer at startup; the method is responsible for:</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#UDP_init_and_listen">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy-module.html#decode_msg" class="summary-sig-name">decode_msg</a>(<span class="summary-sig-arg">msg</span>)</span><br />
+      Returns:
+msg_id, numerical_id, parameters</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#decode_msg">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="encode_message"></a><span class="summary-sig-name">encode_message</span>(<span class="summary-sig-arg">msg_type</span>,
+        <span class="summary-sig-arg">numerical_id</span>,
+        <span class="summary-sig-arg">params</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>)</span><br />
+      params is string -&gt; added as-is
+params is list -&gt; concatenated, separated by ARG_END</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#encode_message">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy-module.html#is_multicast" class="summary-sig-name">is_multicast</a>(<span class="summary-sig-arg">ip</span>)</span><br />
+      Tells whether the specified ip is a multicast address or not</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#is_multicast">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy-module.html#decode_ivybus" class="summary-sig-name">decode_ivybus</a>(<span class="summary-sig-arg">ivybus</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Transforms the supplied string into the corrersponding broadcast address
+and port</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#decode_ivybus">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== VARIABLES ==================== -->
+<a name="section-Variables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Variables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="IvyRegexpAdded"></a><span class="summary-name">IvyRegexpAdded</span> = <code title="3">3</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="IvyRegexpRemoved"></a><span class="summary-name">IvyRegexpRemoved</span> = <code title="4">4</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="NOT_INITIALIZED"></a><span class="summary-name">NOT_INITIALIZED</span> = <code title="0">0</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="INITIALIZATION_IN_PROGRESS"></a><span class="summary-name">INITIALIZATION_IN_PROGRESS</span> = <code title="1">1</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="INITIALIZED"></a><span class="summary-name">INITIALIZED</span> = <code title="2">2</code>
+    </td>
+  </tr>
+<tr bgcolor="#e8f0f8" >
+  <th colspan="2" class="group-header"
+    >&nbsp;&nbsp;&nbsp;&nbsp;Messages types</th></tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="BYE"></a><span class="summary-name">BYE</span> = <code title="0">0</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="ADD_REGEXP"></a><span class="summary-name">ADD_REGEXP</span> = <code title="1">1</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="MSG"></a><span class="summary-name">MSG</span> = <code title="2">2</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="ERROR"></a><span class="summary-name">ERROR</span> = <code title="3">3</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="DEL_REGEXP"></a><span class="summary-name">DEL_REGEXP</span> = <code title="4">4</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="END_INIT"></a><span class="summary-name">END_INIT</span> = <code title="5">5</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="END_REGEXP"></a><span class="summary-name">END_REGEXP</span> = <code title="5">5</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="START_INIT"></a><span class="summary-name">START_INIT</span> = <code title="6">6</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="START_REGEXP"></a><span class="summary-name">START_REGEXP</span> = <code title="6">6</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="DIRECT_MSG"></a><span class="summary-name">DIRECT_MSG</span> = <code title="7">7</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="DIE"></a><span class="summary-name">DIE</span> = <code title="8">8</code>
+    </td>
+  </tr>
+<tr bgcolor="#e8f0f8" >
+  <th colspan="2" class="group-header"
+    >&nbsp;&nbsp;&nbsp;&nbsp;Separators</th></tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="ARG_START"></a><span class="summary-name">ARG_START</span> = <code title="'\x02'"><code class="variable-quote">'</code><code class="variable-string">\x02</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="ARG_END"></a><span class="summary-name">ARG_END</span> = <code title="'\x03'"><code class="variable-quote">'</code><code class="variable-string">\x03</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+<tr bgcolor="#e8f0f8" >
+  <th colspan="2" class="group-header"
+    >&nbsp;&nbsp;&nbsp;&nbsp;Misc. constants</th></tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="DEFAULT_IVYBUS"></a><span class="summary-name">DEFAULT_IVYBUS</span> = <code title="'127:2010'"><code class="variable-quote">'</code><code class="variable-string">127:2010</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="PROTOCOL_VERSION"></a><span class="summary-name">PROTOCOL_VERSION</span> = <code title="3">3</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="DEFAULT_TTL"></a><span class="summary-name">DEFAULT_TTL</span> = <code title="64">64</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="IvyApplicationConnected"></a><span class="summary-name">IvyApplicationConnected</span> = <code title="1">1</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="IvyApplicationDisconnected"></a><span class="summary-name">IvyApplicationDisconnected</span> = <code title="2">2</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="IVY_SHOULD_NOT_DIE"></a><span class="summary-name">IVY_SHOULD_NOT_DIE</span> = <code title="'Ivy Application Should Not Die'"><code class="variable-quote">'</code><code class="variable-string">Ivy Application Should Not Die</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+<tr bgcolor="#e8f0f8" >
+  <th colspan="2" class="group-header"
+    >&nbsp;&nbsp;&nbsp;&nbsp;Objects and functions related to logging</th></tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="ivylogger"></a><span class="summary-name">ivylogger</span> = <code title="logging.getLogger('Ivy')">logging.getLogger('Ivy')</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="ivy_loghdlr"></a><span class="summary-name">ivy_loghdlr</span> = <code title="logging.StreamHandler()">logging.StreamHandler()</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ivy.ivy-module.html#ivy_logformatter" class="summary-name">ivy_logformatter</a> = <code title="logging.Formatter('%(asctime)s %(levelname)s %(message)s')">logging.Formatter('%(asctime)s %(levelname)<code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== FUNCTION DETAILS ==================== -->
+<a name="section-FunctionDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Function Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-FunctionDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="UDP_init_and_listen"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">UDP_init_and_listen</span>(<span class="sig-arg">broadcast_addr</span>,
+        <span class="sig-arg">port</span>,
+        <span class="sig-arg">socket_server</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#UDP_init_and_listen">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Called by an IvyServer at startup; the method is responsible for:</p>
+<ul class="rst-simple">
+<li>sending the initial UDP broadcast message,</li>
+<li>waiting for incoming UDP broadcast messages being sent by new clients
+connecting on the bus.  When it receives such a message, a connection
+is established to that client and that connection (a socket) is then
+passed to the IvyServer instance.</li>
+</ul>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>broadcast_addr</code></strong> - the broadcast address used on the Ivy bus</li>
+        <li><strong class="pname"><code>port</code></strong> - the port dedicated to the Ivy bus</li>
+        <li><strong class="pname"><code>socket_server</code></strong> - instance of an IvyServer handling communications
+for our client.</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="decode_msg"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">decode_msg</span>(<span class="sig-arg">msg</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#decode_msg">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>msg_id, numerical_id, parameters</dd>
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'><a href="ivy.ivy.IvyMalformedMessage-class.html">IvyMalformedMessage</a></strong></code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="is_multicast"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">is_multicast</span>(<span class="sig-arg">ip</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#is_multicast">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  Tells whether the specified ip is a multicast address or not
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>ip</code></strong> - an IPv4 address in dotted-quad string format, for example
+192.168.2.3</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="decode_ivybus"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">decode_ivybus</span>(<span class="sig-arg">ivybus</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#decode_ivybus">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  Transforms the supplied string into the corrersponding broadcast address
+and port
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>ivybus</code></strong> - if <tt class="rst-docutils literal"><span class="pre">None</span></tt> or empty, defaults to environment variable
+<tt class="rst-docutils literal"><span class="pre">IVYBUS</span></tt></li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd><p>a tuple made of (broadcast address, port number). For example:</p>
+<pre class="rst-literal-block">
+&gt;&gt;&gt; print decode_ivybus('192.168.12:2010')
+('192.168.12.255', 2010)
+</pre></dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== VARIABLES DETAILS ==================== -->
+<a name="section-VariablesDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Variables Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-VariablesDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="ivy_logformatter"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">ivy_logformatter</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ivy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.tls.cena.fr/products/ivy/">ivy-python: a python library for the Ivy software bus</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Tue Jun 10 18:21:20 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
