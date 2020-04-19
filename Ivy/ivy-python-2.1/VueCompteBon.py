@@ -106,7 +106,14 @@ class Application(Frame):
 
         
     def reset(self):
-        a = 0
+        for i in range(5):
+            self.boutonsChiffres[i].config(state= NORMAL)
+            self.label_historique[i]['text'] = ""
+        self.historique.clear()
+        self.resultatHistorique.clear()
+        self.boutonsHistorique.clear()
+        self.cleanLabel()
+            
     def valider(self):
         if(self.labelN['text'] == self.labelA['text']):
             print("vous avez trouver")
