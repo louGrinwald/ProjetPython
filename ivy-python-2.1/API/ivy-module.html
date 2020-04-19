@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>ivy</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th bgcolor="#70b0f0" class="navbar-select"
+          >&nbsp;&nbsp;&nbsp;Home&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.tls.cena.fr/products/ivy/">ivy-python: a python library for the Ivy software bus</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;ivy
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="ivy-module.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PACKAGE DESCRIPTION ==================== -->
+<h1 class="epydoc">Package ivy</h1><p class="nomargin-top"><span class="codelink"><a href="ivy-pysrc.html">source&nbsp;code</a></span></p>
+<p>Ivy is a lightweight software bus for quick-prototyping protocols. It
+allows applications to broadcast information through text messages, with a
+subscription mechanism based on regular expressions.</p>
+<p>If you're used to the standard Ivy API, you probably want to look at the
+<a href="ivy.std_api-module.html" class="link">std_api</a> module.</p>
+<div class="rst-attention">
+<p class="rst-first rst-admonition-title">Attention!</p>
+<p class="rst-last">Version 2.0 broke backward compatibility.  If you are upgrading
+from ivy-python v1.x, be sure to read the <a class="rst-reference" href="#rst-v2-0-compatibility-notes">v2.0 compatibility notes</a>,
+below.</p>
+</div>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-introduction" name="rst-introduction">Introduction</a></h1>
+<p>The Ivy software bus was designed at the French Centre d'Etudes de la
+Navigation Aerienne (CENA).  The original work: sofware, documentation,
+papers, credits can be found on the <a class="rst-reference" href="http://www.tls.cena.fr/products/ivy/" target="_top">Ivy Home Page</a>; it contains all the
+necessary materials needed to understand Ivy.</p>
+<p>This package is the Python library; Ivy librairies are also available for
+numerous languages, among wich: C, C#, C++, Java, Perl --see the <a class="rst-reference" href="http://www.tls.cena.fr/products/ivy/download/index.html" target="_top">Ivy Download
+Page</a> for details.</p>
+<p>This python library is a full rewrite of the original software, and it is
+written in pure python.  Note that another python implementation is available
+at the <a class="rst-reference" href="http://www.tls.cena.fr/products/ivy/download/binaries.html" target="_top">Ivy downloads page</a>, which is built by <a class="rst-reference" href="http://www.swig.org/" target="_top">SWIG</a>
+on top of the Ivy C library.</p>
+</div>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-understanding-the-package" name="rst-understanding-the-package">Understanding the package</a></h1>
+<p>This Ivy package is made of two modules: <a href="ivy.ivy-module.html" class="link">ivy</a> and <a href="ivy.std_api-module.html" class="link">std_api</a>.</p>
+<p>In order to understand the way it works, we highly suggest that you read the
+materials available from the <a class="rst-reference" href="http://www.tls.cena.fr/products/ivy/" target="_top">Ivy Home Page</a>.  Within the documentation of
+this python package we suppose that you are already familiar with the way an
+ivy bus works, and with how the corresponding framework is organized.</p>
+<div class="rst-section">
+<h2 class="heading"><a id="rst-ivy-std-api" name="rst-ivy-std-api"><a href="ivy.std_api-module.html" class="link">ivy.std_api</a></a></h2>
+<p>Once familiar with the ivy framework, you'll find in the <a href="ivy.std_api-module.html" class="link">std_api</a> module the
+exact API you're expecting (see for example the  <a class="rst-reference" href="http://www.tls.cena.fr/products/ivy/documentation/ivy-c.pdf" target="_top">The Ivy C library</a>).</p>
+<p>An example of use, directly taken from the original swig-base python release,
+is included with the package, see <tt class="rst-docutils literal"><span class="pre">examples/pyhello.py</span></tt>.</p>
+<div class="rst-important">
+<p class="rst-first rst-admonition-title">Important</p>
+<p class="rst-last">One big difference with the original implementation is that
+there is nothing like a &quot;main loop&quot;: the server is activated as soon as the
+method <a href="ivy.std_api-module.html#IvyStart" class="link">ivy.std_api.IvyStart</a> is called, and the <a href="ivy.std_api-module.html#IvyMainLoop" class="link">ivy.std_api.IvyMainLoop</a> method simply
+waits for the server to terminate (the server is in fact</p>
+</div>
+</div>
+<div class="rst-section">
+<h2 class="heading"><a id="rst-ivy-ivy" name="rst-ivy-ivy"><a href="ivy.ivy-module.html" class="link">ivy.ivy</a></a></h2>
+<p>It's where the &quot;magic&quot; goes: the module <a href="ivy.std_api-module.html" class="link">std_api</a> is built on top of it.</p>
+<p>You'll be interested in using this package if for example, you want to manage
+more than one ivy-bus in an application.  We won't give here much hint on how
+to use it, since the code of the <a href="ivy.ivy-module.html" class="link">ivy</a> odule itself serves as a perfect
+example of use!</p>
+</div>
+</div>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-logging" name="rst-logging">Logging</a></h1>
+<blockquote>
+<p>The module issues messages through python's standard <tt class="rst-docutils literal"><span class="pre">logging</span></tt> module:</p>
+<blockquote>
+<ul class="rst-simple">
+<li>logger's name: <tt class="rst-docutils literal"><span class="pre">'Ivy'</span></tt></li>
+<li>default level: <tt class="rst-docutils literal"><span class="pre">logging.INFO</span></tt></li>
+<li>default handler: a <tt class="rst-docutils literal"><span class="pre">logging.StreamHandler</span></tt> logging messages to the
+standard error stream.</li>
+</ul>
+</blockquote>
+<p>For example, if you need to see all messages issued by the package, including
+debug messages, use the following code excerpt:</p>
+<pre class="py-doctest">
+<span class="py-keyword">import</span> logging
+logging.getLogger(<span class="py-string">'Ivy'</span>).setLevel(logging.DEBUG)</pre>
+<p>Further details can be found in the <a class="rst-reference" href="http://docs.python.org/lib/module-logging.html" target="_top">Python standard documentation</a>.</p>
+</blockquote>
+</div>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-v2-0-compatibility-notes" name="rst-v2-0-compatibility-notes">v2.0 compatibility notes</a></h1>
+<p>Version 2.0 broke the backward compatibility with former versions 1.x: every
+callback methods now receives an <a href="ivy.ivy.IvyClient-class.html" class="link">ivy.IvyClient</a> object as its first
+parameter.</p>
+<p>This makes it possible for the receiving code to know which agent on the bus
+sends the corresponding event. Unfortunately, this breaks backward
+compatibility and callback methods must be adapted to the new scheme.</p>
+<p>For example, suppose you're binding a regexp to the callback <tt class="rst-docutils literal"><span class="pre">on_msg</span></tt>:</p>
+<pre class="py-doctest">
+IvyBindMsg(onhello, <span class="py-string">&quot;^hello=([^ ]*) from=([^ ]*)&quot;</span>)</pre>
+<p>In ivy-python 1.x, you used to declare the callback as follows</p>
+<pre class="py-doctest">
+<span class="py-keyword">def</span> <span class="py-defname">onhello</span>(*arg):
+    <span class="py-keyword">print</span> <span class="py-string">&quot;Got hello message: %s from: %s&quot;</span>% (arg[0], arg[1])</pre>
+<p>or:</p>
+<pre class="py-doctest">
+<span class="py-keyword">def</span> <span class="py-defname">onhello</span>(message, <span class="py-keyword">from</span>):
+    <span class="py-keyword">print</span> <span class="py-string">&quot;Got hello message: %s from: %s&quot;</span>% (message, <span class="py-keyword">from</span>)</pre>
+<p>In version 2.0, your callbacks also get the agent triggering the event as the
+1st parameter; the previous callbacks should be rewritten this way:</p>
+<pre class="py-doctest">
+<span class="py-keyword">def</span> <span class="py-defname">onhello</span>(*arg):
+    <span class="py-keyword">print</span> <span class="py-string">&quot;Got hello message: %s from: %s (coming from ivy agent: %r)&quot;</span>% (arg[1], arg[2], arg[0])</pre>
+<p>or:</p>
+<pre class="py-doctest">
+<span class="py-keyword">def</span> <span class="py-defname">onhello</span>(agent, message, <span class="py-keyword">from</span>):
+    <span class="py-keyword">print</span> <span class="py-string">&quot;Got hello message: %s from: %s (coming from ivy agent: %r)&quot;</span>% (message, <span class="py-keyword">from</span>, agent)</pre>
+</div>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-misc-notes" name="rst-misc-notes">Misc. notes</a></h1>
+<blockquote>
+<ul class="rst-simple">
+<li>direct msg: to app_name == the last one registered w/ that name (for
+example register ivyprobe 3 times and send a direct msg to IVYPROBE from
+one of them)</li>
+<li>regexps order and ids: ivyprobe e.g. subscribes regexp in reverse order of
+ids.  If two matches -&gt; which one should we choose? Not explicitely
+documented.</li>
+</ul>
+</blockquote>
+</div>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-license" name="rst-license">License</a></h1>
+<p>This software is distributed under the <a class="rst-reference" href="http://www.opensource.org/licenses/bsd-license.php" target="_top">&quot;new&quot; BSD license</a>,</p>
+<p>(please refer the file <tt class="rst-docutils literal"><span class="pre">LICENSE</span></tt> for full legal details)</p>
+<p>Copyright (c) 2005-2008 Sebastien Bigaret &lt;<a class="rst-reference" href="mailto:sbigaret&#64;users.sourceforge.net" target="_top">sbigaret&#64;users.sourceforge.net</a>&gt;</p>
+</div>
+
+<hr />
+<div class="fields">      <p><strong>Version:</strong>
+        2.1
+      </p>
+</div><!-- ==================== SUBMODULES ==================== -->
+<a name="section-Submodules"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Submodules</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Submodules"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr><td class="summary">
+  <ul class="nomargin">
+    <li> <strong class="uidlink"><a href="ivy.ivy-module.html">ivy.ivy</a></strong>: <em class="summary">The following code is a typical example of use:</em>    </li>
+    <li> <strong class="uidlink"><a href="ivy.std_api-module.html">ivy.std_api</a></strong>: <em class="summary">Implements the standard Ivy API.</em>    </li>
+  </ul></td></tr>
+</table>
+
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th bgcolor="#70b0f0" class="navbar-select"
+          >&nbsp;&nbsp;&nbsp;Home&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.tls.cena.fr/products/ivy/">ivy-python: a python library for the Ivy software bus</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Tue Jun 10 18:21:20 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
