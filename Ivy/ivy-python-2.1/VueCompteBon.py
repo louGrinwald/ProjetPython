@@ -100,8 +100,9 @@ class Application(Frame):
             if(self.labelA['text'] == self.boutonsChiffres[i]['text'] or self.labelB['text'] == self.boutonsChiffres[i]['text']):
                 self.boutonsChiffres[i].config(state= NORMAL)
         self.labelOp['text'] = "op"
-        self.labelA['text'] = 'A'
         self.labelB['text'] = 'B'
+        if(self.resultatHistorique.__len__() == 0):
+            self.labelA['text'] = 'A'
 
         
     def reset(self):
