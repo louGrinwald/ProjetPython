@@ -4,6 +4,8 @@
 import os, string, sys, time, getopt
 #sys.path.append ("F:\ivy-python-2.1")
 from ivy.std_api import *
+from ModeleCompteBon import *
+from VueCompteBon import *
 
 try:
     import readline
@@ -31,9 +33,9 @@ Type '.help' in ivyprobe for a list of available commands.'''
 '''La fonction la pour savoir qui est le joueur 1 ou 2''' 
 def on_connection_change(agent, event):
     if event == IvyApplicationDisconnected :
-        info('Ivy application %r has disconnected', agent)
+        info('Votre adversaire s est deconnecte : %r', agent)
     else:
-        info('Ivy application %r has connected', agent)
+        info('Un adversaire s est connecte : %r', agent)
     info('Ivy applications currently on the bus: %s',
          ','.join(IvyGetApplicationList()))
     
@@ -144,6 +146,16 @@ if __name__ == '__main__':
 
     # Ok, time to go
     time.sleep(0.5)
+    
+    #On cree le modele, il est dans son etat initial
+    modele = CompteBon()
+    
+    #On cree la vue, elle demarre elle meme son loop
+    root = Tk()
+    app = Application(root)
+    root.mainloop()
+    
+    
     info('Go ahead! (type .help for help on commands)')
     while 1:
         try:

@@ -94,75 +94,64 @@ class CompteBon:
         print(nombres[:-2])
         print("")
         
-    def compte(self,tabInt, nombre, total, compteur):
-        compteur += 1
-        for i in range(0, nombre -1):
-            for j in range(i+1, nombre):
-                for k in range(1, self.nbOperateur + 1):
-                    t = tabInt
-                    if k == 1:
-                        t[i] += t[j]
-                        if t[i] == total and nombre == 2:
-                            print("Le compte est bon en ", compteur)
-                            print(tabInt[i], self.operateurs[k-1], tabInt[j], t[i])
-                            if nombre > 0:
-                                t[j] = t[nombre - 1]
-                            if(self.compte(t, nombre - 1, total, compteur)):
-                                print(tabInt[i], self.operateurs[k-1], tabInt[j], t[i])
-                            return 1
-                    
-                    if k == 2:
-                        t[i] *= t[j]
-                        if t[i] == total and nombre == 2:
-                            print("Le compte est bon en ", compteur)
-                            print(tabInt[i], self.operateurs[k-1], tabInt[j], t[i])
-                            if nombre > 0:
-                                t[j] = t[nombre - 1]
-                            if(self.compte(t, nombre - 1, total, compteur)):
-                                print(tabInt[i], self.operateurs[k-1], tabInt[j], t[i])
-                            return 1 
-                        
-                    if k == 3:
-                        go = True
-                        if ((t[i] > t[j] and t[i] > 0 and t[j] > 0 and ((t[i] % t[j]) == 0))): 
-                            t[i] = t[i] / t[j]
-                        else:
-                            go = False
-                        if go:
-                            if t[i] == total and nombre == 2:
-                                print("Le compte est bon en ", compteur)
-                                print(tabInt[i], self.operateurs[k-1], tabInt[j], t[i])
-                                if nombre > 0:
-                                    t[j] = t[nombre - 1]
-                                if(self.compte(t, nombre - 1, total, compteur)):
-                                    print(tabInt[i], self.operateurs[k-1], tabInt[j], t[i])
-                                return 1
-                            
-                    if k == 4:
-                        go = True
-                        if (t[i] < t[j]):
-                            t[i] = t[j] - t[i]
-                        else:
-                            t[i] -= t[j]
-                        if t[i] == total and nombre == 2:
-                            print("Le compte est bon en ", compteur)
-                            print(tabInt[i], self.operateurs[k-1], tabInt[j], t[i])
-                            if nombre > 0:
-                                t[j] = t[nombre - 1]
-                            if(self.compte(t, nombre - 1, total, compteur)):
-                                print(tabInt[i], self.operateurs[k-1], tabInt[j], t[i])
-                                return 1                                  
-        
-        return 0
+
+#des outils pour la fonction de solution        
+APPLY = {'+': lambda a,b: a+b,
+     '-': lambda a,b: a-b,
+     '*': lambda a,b: a*b,
+     '/': lambda a,b: a/b}
+INVERSE = {'+': '-', '-': '+', '*': '/', '/': '*'}
+ 
+#retourne toutes les solutions pour trouver le nombre target avec les nombres du tableau numbers
+#----------------------------------ATTENTION, ELLE FAIT DES DIVISIONS PAS ENTIERES-----------------
+def solve(target, numbers):
+    if len(numbers) == 1:
+        return [int(target)] if target == numbers[0] else []
+    else:
+        result = []
+        for num in numbers:
+            for op in '+-*/':
+                try:
+                    new_target = APPLY[INVERSE[op]](target, num)
+                    for sol in solve(new_target,[n for n in numbers if n != num]):
+                        result.append((op, sol, int(num)))
+                except ZeroDivisionError:
+                    pass
+        return result
+
+def format(expr):
+    if isinstance(expr, int):
+        return str(expr)
+ 
+    op, a, b = expr
+    if isinstance(a, int):
+        return "%d %s %d" % (a, op, b)
+    else:
+        return "(%s) %s %d" % (format(a), op, b)
+     
 
 #Exemple
-c = CompteBon()
-c.affichage()
-c.calcul(c.choisis[2], c.choisis[0], "*")
-c.affichage()
-c.calcul(c.choisis[4], c.choisis[0], "-")
-c.affichage()
-c.retour()
-c.affichage()
-c.calcul(c.choisis[1], c.choisis[0], "/")
-c.affichage()
+#c = CompteBon()
+#c.affichage()
+#c.calcul(c.choisis[2], c.choisis[0], "*")
+#c.affichage()
+#c.calcul(c.choisis[4], c.choisis[0], "-")
+#c.affichage()
+#c.retour()
+#c.affichage()
+#c.calcul(c.choisis[1], c.choisis[0], "/")
+#c.affichage()
+
+#for sol in solve(5, [5]):
+#    print("5 =", format(sol))
+#Une boucle qui donne toutes les solutions 
+#for sol in solve(5, [3, 2]):
+#    print ("5 =", format(sol))
+#for sol in solve(21, [3, 2, 5]):
+#    print ("21 =", format(sol))
+#Cette fonction est incapable de combiner des nombres
+#for sol in solve(32, [1, 1, 4, 4]):
+#    print ("32 =", format(sol)) 
+#Ou alors on donne la premiere solution trouvee
+#print("72 =",format(solve(72, [3, 6, 2, 4])[0]))
+
