@@ -33,9 +33,9 @@ Type '.help' in ivyprobe for a list of available commands.'''
 '''La fonction la pour savoir qui est le joueur 1 ou 2''' 
 def on_connection_change(agent, event):
     if event == IvyApplicationDisconnected :
-        info('Votre adversaire s est deconnecte : %r', agent)
+        info('Ivy application %r has disconnected', agent)
     else:
-        info('Un adversaire s est connecte : %r', agent)
+        info('Ivy application %r has connected', agent)
     info('Ivy applications currently on the bus: %s',
          ','.join(IvyGetApplicationList()))
     
@@ -152,7 +152,7 @@ if __name__ == '__main__':
     
     #On cree la vue, elle demarre elle meme son loop
     root = Tk()
-    app = Application(root)
+    app = Vue(root)
     root.mainloop()
     
     

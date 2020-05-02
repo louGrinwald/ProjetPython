@@ -1,8 +1,6 @@
 from tkinter import *
 import queue
 from functools import partial
-from ModeleCompteBon import *
-import datetime
 plus = 0
 moins = 1
 fois = 2
@@ -16,19 +14,10 @@ class Application(Frame):
         # Set up the GUI part
         self.pack()
         self.createWidgets()
-        self.modele = CompteBon()
-        self.recupModele(self.modele.choisis, self.modele.total)
-        self.timerOn = True
-        self.startTime = datetime.datetime.now()
         self.running = 1
-        # Start the periodic call in the GUI
+        # Start the periodic call in the GUI 
         self.periodicCall()
-        
 
-    def recupModele(self,nombres,N):
-        self.labelN["text"] = N
-        for i in range(6):
-            self.boutonsChiffres[i]['text'] = nombres[i]
 
     def cleanLabel(self):
         self.labelA['text'] = "A"
@@ -113,70 +102,21 @@ class Application(Frame):
             if(self.labelA['text'] == self.boutonsChiffres[i]['text'] or self.labelB['text'] == self.boutonsChiffres[i]['text']):
                 self.boutonsChiffres[i].config(state= NORMAL)
         self.cleanLabel()
-    
-    def showSolution(self, fInfos):
-        choisis = [0,0,0,0,0,0]
-        for i in range(6):
-             choisis[i] = self.boutonsChiffres[i]['text']
-             
-        if(solve(self.labelN['text'],choisis)):
-            print("Solution : ",self.labelN['text']," = ",format(solve(self.labelN['text'],choisis)[0]))
-        self.trueReset(fInfos)
-    
+        
     def reset(self):
-        for i in range(6*2):
-            if(i < 6):
-                self.boutonsChiffres[i].config(state=NORMAL)
-            else:
-                self.boutonsChiffres[i]['text'] = ""
-                self.boutonsChiffres[i].config(state=DISABLED)
-        self.historique.clear()
         for i in range(5):
+            self.boutonsChiffres[i].config(state= NORMAL)
             self.label_historique[i]['text'] = ""
+        self.historique.clear()
         self.resultatHistorique.clear()
         self.boutonsHistorique.clear()
-        self.nextFreeButton = 6
         self.cleanLabel()
-        
-        self.modele = CompteBon()
-        self.recupModele(self.modele.choisis, self.modele.total)
-        self.startTime = datetime.datetime.now()
-        self.timerOn = True
-    
-    def trueReset(self, fInfos):
-        fInfos.destroy()
-        self.reset()
-    
-    def abandon(self):
-        #Oncree un popup
-        fInfos = Toplevel()          # Popup -> Toplevel()
-        fInfos.title('Popup')
-        label = Label(fInfos, text="Voulez-vous voir la solution ?")
-        label.grid(row = 0,column = 0, columnspan = 2)
-        oui = Button(fInfos, text='Oui', command=partial(self.showSolution,fInfos))
-        oui.grid(row = 1,column = 0)
-        non = Button(fInfos, text='Non', command=partial(self.trueReset,fInfos))
-        non.grid(row = 1,column = 1)
-        fInfos.transient(self)       # Reduction popup impossible 
-        fInfos.grab_set()          # Interaction avec fenetre jeu impossible
-        self.wait_window(fInfos)   # Arret script principal
             
     def valider(self):
         for i in range(self.nextFreeButton):
             if(self.labelN['text'] == self.boutonsChiffres[i]['text']):
                 print("GAGNE")
-                self.timerOn = False
                 return
-    def duel(self):
-        #Oncree un popup
-        fInfos = Toplevel()          # Popup -> Toplevel()
-        fInfos.title('Popup')
-        Label(fInfos, text="Une invitation a ete envoyee a votre adversaire").pack(padx=10, pady=10)
-        Button(fInfos, text='Quitter', command=fInfos.destroy).pack(padx=10, pady=10)
-        fInfos.transient(self)       # Reduction popup impossible 
-        fInfos.grab_set()          # Interaction avec fenetre jeu impossible
-        self.wait_window(fInfos)   # Arret script principal
-        
     
     def createWidgets(self):
         #Les boutons pour les chiffres initiaux et ceux qui seront crees au fur et a mesue
@@ -184,7 +124,7 @@ class Application(Frame):
         for i in range(6*2):
             if(i < 6):
                 self.boutonsChiffres[i] = Button(self, text="10"+str(i),command=partial(self.addChiffre,i))
-                self.boutonsChiffres[i].grid(row = 5,column = i+2, sticky = E+W)
+                self.boutonsChiffres[i].grid(row = 5,column = i+2)
             else:
                 self.boutonsChiffres[i] = Button(self, text="",command=partial(self.addChiffre,i))
                 self.boutonsChiffres[i].grid(row = 4,column = i-6+2, sticky = E+W)
@@ -206,12 +146,10 @@ class Application(Frame):
         self.boutonsOperateurs[5] = Button(self, text="C",command=self.effacer)
         self.boutonsOperateurs[5].grid(row = 5,column = 11,columnspan = 2, sticky = E+W)
         #Les boutons d'action
-        self.boutonAbandonner = Button(self, text="Abandonner",command=self.abandon)
+        self.boutonAbandonner = Button(self, text="Abandonner",command=self.reset)
         self.boutonAbandonner.grid(row = 2,column = 9,columnspan = 4, sticky = E+W)
         self.boutonValider = Button(self, text="Valider",command=self.valider)
         self.boutonValider.grid(row = 3,column = 9,columnspan = 4, sticky = E+W)
-        self.boutonFight = Button(self, text="C'est l'heure du du-du-du-duel",command=self.duel)
-        self.boutonFight.grid(row = 3,column = 2,columnspan = 6, sticky = E+W)
         #Les labels de l'historique des operations et le bouton pour evenir en arriere
         self.historique = []
         self.resultatHistorique = []
@@ -250,9 +188,6 @@ class Application(Frame):
             action = self.queue.get()
             print(action)
             
-        if(self.timerOn):
-            difference = datetime.datetime.now().replace(microsecond=0) - self.startTime.replace(microsecond=0)
-            self.labelTimerActu.configure(text=difference)
         
         if not self.running:
             # This is the brutal stop of the system. You may want to do
@@ -264,8 +199,7 @@ class Application(Frame):
     def endApplication(self):
         self.running = 0
 
-'''
+
 root = Tk()
 app = Application(root)
 root.mainloop()
-'''
