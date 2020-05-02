@@ -6,13 +6,15 @@ import os, string, sys, time, getopt
 from ivy.std_api import *
 from ModeleCompteBon import *
 from VueCompteBon import *
+from random import randint
 
 #On cree la vue en global
 root = Tk()
 app = Application(root)
 
-#cette valeur determine qui est le joueur 1 et le joueur 2
+#ces valeurs determinent qui est le joueur 1 et le joueur 2
 joueur = 0
+rnd = randint(0,100)
 
 try:
     import readline
@@ -44,30 +46,19 @@ def on_connection_change(agent, event):
         info('Votre adversaire s est deconnecte : %r', agent)
         '''--------------------------------ICI GERER LA DECO------------------------------------'''
     else:
+        IvySendMsg("choose_player:"+str(rnd))
         '''patate = info('Un adversaire s est connecte : %r', agent)
-        patate2 = info('Un adversaire s est connecte : %r', IvyGetApplication('pyivyprobe'))'''
+        patate2 = info('Un adversaire s est connecte : %r', IvyGetApplication('pyivyprobe'))
         appli = IvyGetApplication('pyivyprobe')
         host = IvyGetApplicationHost(appli)
         name = IvyGetApplicationName(appli)
         print(host)
         print(name)
-        '''print(patate[41:-13])
+        print(patate[41:-13])
         print(patate2[41:-13])
         if(int(patate[41:-13])):
             joueur = 1'''
         '''---------------------------------SETUP LE DUEL ICI--------------------------------------------'''
-        #On cree le modele et on recupere les chiffres
-        modele = CompteBon()
-        nombres = modele.choisis
-        N = modele.total
-        #On prepare la chaine de caracteres
-        commande = "start:"+str(N)+","
-        for i in range(6):
-            commande += str(nombres[i])+","
-        commande = commande[:-1]
-        #On transmet a la vue et a notre adversaire
-        #IvySendMsg(commande)
-        app.queue.put(commande)
     info('Ivy applications currently on the bus: %s',
          ','.join(IvyGetApplicationList()))
     
@@ -100,10 +91,7 @@ def on_trouve(agent, *arg):
         info('Sent to %s peers'%IvySendMsg('A vous de jouer, entrez une colonne entre 1 et 7 (exemple : colonne : 5)'))
         
 def on_play(agent, *arg):
-    '''----------------------Trouver les chiffres seulement, a faire dans la vue ?--------------
-    >>> str = "h3110 23 cat 444.4 rabbit 11 2 dog"
-    >>> [int(s) for s in str.split() if s.isdigit()]
-    [23, 11, 2]'''
+    
     info("Vous avez gagne")
     info('Sent to %s peers'%IvySendMsg('Vous avez perdu'))
     
@@ -116,17 +104,38 @@ def on_timer_end(agent, *arg):
     info('Sent to %s peers'%IvySendMsg('Vous avez perdu'))
     
 def on_start(agent, *arg):
-    app.queue.put(str(arg))
+    app.queue.put(str(arg[0]))
     info("Que la partie commence !")
     IvySendMsg('Que la partie commence !')
     
-def on_am_i_alone(agent):
-    joueur = 1
-    IvySendMsg('not_alone')
-    
-def on_not_alone(agent):
-    joueur = 2
+def on_choose_player(agent, *larg):
+    info( "Received %s ", larg[0])
+    nombre = int(str(larg[0])[14:])
+    global rnd
+    if(rnd > nombre):
+        joueur = 1
+        #On cree le modele et on recupere les chiffres
+        modele = CompteBon()
+        nombres = modele.choisis
+        N = modele.total
+        #On prepare la chaine de caracteres
+        commande = "start:"+str(N)+","
+        for i in range(6):
+            commande += str(nombres[i])+","
+        commande = commande[:-1]
+        #On transmet a la vue et a notre adversaire
+        app.queue.put(commande)
+        IvySendMsg(commande)
+    elif(rnd == nombre):
+        rnd = randint(0,100)
+        IvySendMsg("choose_player:"+str(rnd))
+    else:
+        joueur = 2
+    print("Je suis le joueur "+str(joueur))
 
+def on_any(agent, *larg):
+    info( "%s ", larg[0])
+    
 #la boucle du sniffer
 def task():
     
@@ -329,16 +338,15 @@ if __name__ == '__main__':
     start:N,C1,C2,C3,C4,C5,C6  au debut pour donner le modele
     timer_end                  lorsque le timer tombe a 0
     fail                        le joueur n'a pas reussi a ptrouver son nombre
-    am_i_alone                demande si des autres applications existent
-    not_alone                 la reponse a un am_i_alone, signifiant que l'application est serveur
+    choose_player               determine qui est le joueur 1
     '''
     IvyBindMsg(on_trouve, '^trouve$')
-    IvyBindMsg(on_play, '^play:[0-9]*[+\-*\/][0-9]*=[0-9]*$')
-    IvyBindMsg(on_start, '^start:[0-9]*,[0-9]*,[0-9]*,[0-9]*,[0-9]*,[0-9]*,[0-9]*$')
+    IvyBindMsg(on_play, '^(play:[0-9]*[+\-*\/][0-9]*=[0-9]*)$')
+    IvyBindMsg(on_start, '^(start:[0-9]*,[0-9]*,[0-9]*,[0-9]*,[0-9]*,[0-9]*,[0-9]*)$')
     IvyBindMsg(on_timer_end, '^timer_end$')
     IvyBindMsg(on_fail, '^fail$')
-    IvyBindMsg(on_am_i_alone, '^am_i_alone$')
-    IvyBindMsg(on_not_alone, '^not_alone$')
+    IvyBindMsg(on_choose_player, '^(choose_player:[0-9]*)$')
+    IvyBindMsg(on_any, "(.*)")
 
     # direct msg
     IvyBindDirectMsg(on_direct_msg)

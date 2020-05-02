@@ -1,4 +1,5 @@
 from tkinter import *
+import re
 import queue
 from functools import partial
 from ModeleCompteBon import *
@@ -248,7 +249,15 @@ class Application(Frame):
         """
         while self.queue.qsize() != 0:
             action = self.queue.get()
-            print(action)
+            if(action[:6] == "start:"):
+                nombresRaw = re.findall('\d+', action)
+                N = int(nombresRaw[0])
+                nombresRaw.pop(0)
+                for i in range(6):
+                    nombresRaw[i] = int(nombresRaw[i])
+                self.recupModele(nombresRaw, N)
+            else:
+                print(action)
             
         if(self.timerOn):
             difference = datetime.datetime.now().replace(microsecond=0) - self.startTime.replace(microsecond=0)
