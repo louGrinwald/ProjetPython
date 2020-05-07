@@ -18,7 +18,8 @@ class Application(Frame):
         self.modele = CompteBon()
         self.recupModele(self.modele.choisis, self.modele.total)
         self.timerOn = True
-        self.startTime = datetime.datetime.now()
+        self.timerBase = datetime.timedelta(seconds=15)
+        self.startTime = datetime.datetime.now() + self.timerBase
         self.running = 1
         # Start the periodic call in the GUI
         self.periodicCall()
@@ -126,6 +127,7 @@ class Application(Frame):
         for i in range(6*2):
             if(i < 6):
                 self.boutonsChiffres[i].config(state=NORMAL)
+                self.boutonsOperateurs[i].config(state=NORMAL) 
             else:
                 self.boutonsChiffres[i]['text'] = ""
                 self.boutonsChiffres[i].config(state=DISABLED)
@@ -136,18 +138,20 @@ class Application(Frame):
         self.boutonsHistorique.clear()
         self.nextFreeButton = 6
         self.cleanLabel()
-        
+        self.startTime = datetime.datetime.now() + self.timerBase
+        self.timerOn = True
+    
+    def generate(self):
         self.modele = CompteBon()
         self.recupModele(self.modele.choisis, self.modele.total)
-        self.startTime = datetime.datetime.now()
-        self.timerOn = True
     
     def trueReset(self, fInfos):
         fInfos.destroy()
         self.reset()
+        self.generate()
     
     def abandon(self):
-        #Oncree un popup
+        #On cree un popup
         fInfos = Toplevel()          # Popup -> Toplevel()
         fInfos.title('Popup')
         label = Label(fInfos, text="Voulez-vous voir la solution ?")
@@ -189,6 +193,7 @@ class Application(Frame):
                 self.boutonsChiffres[i] = Button(self, text="",command=partial(self.addChiffre,i))
                 self.boutonsChiffres[i].grid(row = 4,column = i-6+2, sticky = E+W)
                 self.boutonsChiffres[i].config(state=DISABLED)
+        #On stocke l'index du prochain bouton pour les prochains chiffres a generer
         self.nextFreeButton = 6
             
         #Les boutons des operateurs
@@ -238,21 +243,26 @@ class Application(Frame):
         self.labelTimer.grid(row = 1,column = 9,columnspan = 2, sticky = E+W)
         self.labelTimerActu = Label(self,text="0.00")
         self.labelTimerActu.grid(row = 1,column = 11,columnspan = 2, sticky = E+W)
+        #On cree deja  un tableau pour labels du multijoueur, on l'utilisera plu stard
+        self.labelScore = []
           
     def trouveMulti(self):
         self.timerOn = False
         self.boutonRetour.config(state=DISABLED)
+        self.boutonAbandonner.config(state=NORMAL)
         self.boutonsOperateurs[5].config(state=DISABLED)
         self.annuler()
         self.annuler()
         self.annuler()
         self.annuler()
         self.annuler()
+        self.effacer()
         for i in range(6):
             self.boutonsChiffres[i]['command'] = partial(self.addChiffreMulti,i)
             self.boutonsChiffres[i+6]['command'] = partial(self.addChiffreMulti,i+6)
         for i in range(4):
             self.boutonsOperateurs[i]['command'] = partial(self.addOpMulti,i)
+        self.boutonValider['command'] = self.validerMulti
         self.boutonAbandonner['command'] = self.failProof
         self.boutonsOperateurs[4]['command'] = self.preuve
         IvySendMsg("trouve")
@@ -265,12 +275,46 @@ class Application(Frame):
         self.addOp(i)
         IvySendMsg("play:"+str(self.boutonsOperateurs[i]['text']))
         
+    def validerMulti(self):
+        for i in range(self.nextFreeButton):
+            if(self.labelN['text'] == self.boutonsChiffres[i]['text']):
+                IvySendMsg("success")
+                self.addPoint(0)
+        
+    def quitMulti(self):
+        IvySendMsg("kill")
+        self.resetToSinglePlayer()
+        
+    def resetToSinglePlayer(self):
+        self.labelModeActu['text'] = "Entrainement"
+        self.boutonRetour.config(state=NORMAL)
+        self.boutonValider.config(state=NORMAL)
+        self.boutonAbandonner.config(state=NORMAL)
+        self.boutonQuitMulti.config(state=DISABLED)
+        self.boutonValider['command'] = self.valider
+        self.boutonAbandonner['command'] = self.abandon
+        self.reset()
+        self.generate()
+        self.labelScore.clear()
+            
     def preuve(self):
         self.calculer()
         IvySendMsg("compute")
         
     def failProof(self):
-        IvySendMsg("Votre adversaire gagne le point")
+        IvySendMsg("fail")
+        self.addPoint(1)
+        
+    def addPoint(self,i):
+        #i = 0 si point pour moi, i= 1 si point pour mon adversaire
+        self.labelScore[i+3]['text'] = str(int(self.labelScore[i+3]['text']) + 1)
+        
+    def changeTimer(self):
+        secs = self.entrySecondes.get()
+        mins = self.entryMinutes.get()
+        if(secs.isdigit() and mins.isdigit()):
+            self.timerBase = datetime.timedelta(seconds=int(secs),minutes=int(mins))
+        IvySendMsg("timer:"+secs+","+mins)
         
     def watch_mode(self):
         self.timerOn = False
@@ -293,24 +337,46 @@ class Application(Frame):
         while self.queue.qsize() != 0:
             action = self.queue.get()
             if(action[:6] == "start:"):
+                self.reset()
+                self.boutonValider.config(state=NORMAL)
+                self.boutonRetour.config(state=NORMAL)
                 nombresRaw = re.findall('\d+', action)
                 N = int(nombresRaw[0])
                 nombresRaw.pop(0)
                 for i in range(6):
                     nombresRaw[i] = int(nombresRaw[i])
                 self.recupModele(nombresRaw, N)
-                self.labelModeActu['text'] = "Multijoueur"
+                self.boutonAbandonner.config(state=DISABLED)
                 self.boutonValider['command'] = self.trouveMulti
+                #On cree la partie multijoueur de l'interface si elle n'existe pas
+                if(not self.labelScore):
+                    self.labelScore = [0,0,0,0,0]
+                    self.labelModeActu['text'] = "Multijoueur"
+                    self.labelScore[0] = Label(self,text="Scores :")
+                    self.labelScore[0].grid(row = 0,column = 13,columnspan = 4, sticky = E+W)
+                    self.labelScore[1] = Label(self,text="Vous")
+                    self.labelScore[1].grid(row = 1,column = 13,columnspan = 2, sticky = E+W)
+                    self.labelScore[2] = Label(self,text="Votre adversaire")
+                    self.labelScore[2].grid(row = 1,column = 15,columnspan = 2, sticky = E+W)
+                    self.labelScore[3] = Label(self,text="0")
+                    self.labelScore[3].grid(row = 2,column = 13,columnspan = 2, sticky = E+W)
+                    self.labelScore[4] = Label(self,text="0")
+                    self.labelScore[4].grid(row = 2,column = 15,columnspan = 2, sticky = E+W)
+                    self.boutonQuitMulti = Button(self, text="Quitter le multijoueur",command=self.quitMulti)
+                    self.boutonQuitMulti.grid(row = 3,column = 13,columnspan = 4, sticky = E+W)
+                    self.boutonChangeTimer = Button(self, text="Changer le timer",command=self.changeTimer)
+                    self.boutonChangeTimer.grid(row = 4,column = 13,rowspan = 2, sticky = W+E+'n'+S)
+                    self.entrySecondes = Entry(self)
+                    self.entrySecondes.grid(row = 4,column = 14,columnspan = 2, sticky = E+W)
+                    self.labelSec = Label(self,text=" secondes")
+                    self.labelSec.grid(row = 4,column = 16, sticky = E+W)
+                    self.entryMinutes = Entry(self)
+                    self.entryMinutes.grid(row = 5,column = 14,columnspan = 2, sticky = E+W)
+                    self.labelMinutes = Label(self,text=" minutes")
+                    self.labelMinutes.grid(row = 5,column = 16, sticky = E+W)
+                    self.pack()
             elif(action[:4] == "deco"):
-                self.labelModeActu['text'] = "Entrainement"
-                self.boutonRetour.config(state=NORMAL)
-                self.boutonValider.config(state=NORMAL)
-                self.boutonValider['command'] = self.valider
-                self.boutonAbandonner['command'] = self.abandon
-                for i in range(6):
-                    self.boutonsChiffres[i].config(state=NORMAL)
-                    self.boutonsOperateurs[i].config(state=NORMAL) 
-                self.reset()
+                self.resetToSinglePlayer()
             elif(action[:5] == "watch"):
                 self.watch_mode()
             elif(action[:3] == "op:"):
@@ -331,13 +397,22 @@ class Application(Frame):
                 self.calculer()
                 for i in range(6):
                     self.boutonsChiffres[i].config(state=DISABLED)
-                    self.boutonsChiffres[i+6].config(state=DISABLED) 
+                    self.boutonsChiffres[i+6].config(state=DISABLED)
+            elif(action == "success"):
+                self.addPoint(1)
+            elif(action == "fail"):
+                self.addPoint(0)
+            elif(action[:6] == "timer:"):
+                nombresRaw = re.findall('\d+', action)
+                self.timerBase = datetime.timedelta(seconds=int(nombresRaw[0]),minutes=int(nombresRaw[1]))
+                print("Votre adversaire a change le timer : "+nombresRaw[0]+"s, "+nombresRaw[1]+" mins")
             else:
                 print(action)
             
         if(self.timerOn):
-            difference = datetime.datetime.now().replace(microsecond=0) - self.startTime.replace(microsecond=0)
-            self.labelTimerActu.configure(text=difference)
+            difference = self.startTime.replace(microsecond=0) - datetime.datetime.now().replace(microsecond=0)
+            if(difference >= datetime.timedelta(seconds=0)):
+                self.labelTimerActu.configure(text=difference)
         
         if not self.running:
             # This is the brutal stop of the system. You may want to do

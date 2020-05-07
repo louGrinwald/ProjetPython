@@ -47,22 +47,10 @@ def on_connection_change(agent, event):
         app.queue.put("deco")
     else:
         IvySendMsg("choose_player:"+str(rnd))
-        '''patate = info('Un adversaire s est connecte : %r', agent)
-        patate2 = info('Un adversaire s est connecte : %r', IvyGetApplication('pyivyprobe'))
-        appli = IvyGetApplication('pyivyprobe')
-        host = IvyGetApplicationHost(appli)
-        name = IvyGetApplicationName(appli)
-        print(host)
-        print(name)
-        print(patate[41:-13])
-        print(patate2[41:-13])
-        if(int(patate[41:-13])):
-            joueur = 1'''
     info('Ivy applications currently on the bus: %s',
          ','.join(IvyGetApplicationList()))
     
-def on_die(agent, id):
-    info('Received the order to die from %r with id = %d', agent, id)
+def on_die(agent, *arg):
     IvyStop()    
 
 def on_msg(agent, *arg):
@@ -95,9 +83,16 @@ def on_compute(agent, *arg):
 def on_erase(agent, *arg):
     app.queue.put("erase")
     
+def on_kill(agent, *arg):
+    IvySendMsg("die")
+    
 def on_fail(agent, *arg):
-    info("Vous avez gagne")
-    info('Sent to %s peers'%IvySendMsg('Vous avez perdu'))    
+    app.queue.put(str(arg[0]))
+    IvySendMsg("new_game")
+
+def on_success(agent, *arg):
+    app.queue.put(str(arg[0]))
+    IvySendMsg("new_game")
     
 def on_timer_end(agent, *arg):
     info("Vous avez gagne")
@@ -111,9 +106,20 @@ def on_start(agent, *arg):
 def on_choose_player(agent, *larg):
     nombre = int(str(larg[0])[14:])
     global rnd
+    global joueur
     if(rnd > nombre):
         joueur = 1
-        #On cree le modele et on recupere les chiffres
+    elif(rnd == nombre):
+        rnd = randint(0,100)
+        IvySendMsg("choose_player:"+str(rnd))
+    else:
+        joueur = 2
+        IvySendMsg("new_game")
+    print("Je suis le joueur "+str(joueur))
+    
+def on_new_game(agent, *larg):
+    global joueur
+    if(joueur == 1):
         modele = CompteBon()
         nombres = modele.choisis
         N = modele.total
@@ -125,12 +131,13 @@ def on_choose_player(agent, *larg):
         #On transmet a la vue et a notre adversaire
         app.queue.put(commande)
         IvySendMsg(commande)
-    elif(rnd == nombre):
-        rnd = randint(0,100)
-        IvySendMsg("choose_player:"+str(rnd))
+    elif(joueur == 2):
+        IvySendMsg("new_game")
     else:
-        joueur = 2
-    print("Je suis le joueur "+str(joueur))
+        print("Je suis le joueur "+joueur+" ,ceci pose donc un petit probleme")
+        
+def on_timer(agent, *arg):
+    app.queue.put(str(arg[0]))
 
 def on_any(agent, *larg):
     info( "%s ", larg[0])
@@ -333,13 +340,18 @@ if __name__ == '__main__':
     '''
     Les messages valides sont :
     trouve                     quand un joueur pense avoir trouve la solution
-    play:3 / play:+            lors du mode attente -> affichage
+    play:3 / play:+            lors du mode attente -> affichage d'un chiffre ou operateur
     compute                    declencher le calcul lors ud mode attente
     erase                      declencher le bouton C lors ud mode attente
     start:N,C1,C2,C3,C4,C5,C6  au debut pour donner le modele
     timer_end                  lorsque le timer tombe a 0
-    fail                        le joueur n'a pas reussi a ptrouver son nombre
+    fail                        le joueur adverse n'a pas reussi a prouver son nombre
+    success                     Le joueur adverse a reussi a prouver son nombre
     choose_player               determine qui est le joueur 1
+    new_game                    genere un modele pour une nouvelle partie multijoueur
+    kill                        pour tuer l'autre apllication
+    timer:25,2                  Si on change le timer (secs,mins)
+    Tout autre message sera simplement affiche dans la console
     '''
     IvyBindMsg(on_trouve, '^trouve$')
     IvyBindMsg(on_play, '^(play:[0-9+\-*\/]*)$')
@@ -347,8 +359,13 @@ if __name__ == '__main__':
     IvyBindMsg(on_erase,'^erase$')
     IvyBindMsg(on_start, '^(start:[0-9]*,[0-9]*,[0-9]*,[0-9]*,[0-9]*,[0-9]*,[0-9]*)$')
     IvyBindMsg(on_timer_end, '^timer_end$')
-    IvyBindMsg(on_fail, '^fail$')
+    IvyBindMsg(on_fail, '^(fail)$')
+    IvyBindMsg(on_success, '^(success)$')
     IvyBindMsg(on_choose_player, '^(choose_player:[0-9]*)$')
+    IvyBindMsg(on_new_game, '^new_game$')
+    IvyBindMsg(on_kill, '^kill$')
+    IvyBindMsg(on_timer, '^(timer:[0-9]*,[0-9]*)$')
+    IvyBindMsg(on_die, '^die$')
     IvyBindMsg(on_any, "(.*)")
 
     # direct msg
