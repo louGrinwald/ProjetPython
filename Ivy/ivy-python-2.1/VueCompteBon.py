@@ -4,10 +4,8 @@ import queue
 from functools import partial
 from ModeleCompteBon import *
 import datetime
-plus = 0
-moins = 1
-fois = 2
-diviser = 4
+from ivy.std_api import *
+
 
 class Application(Frame):
     def __init__(self, master):
@@ -168,6 +166,7 @@ class Application(Frame):
                 print("GAGNE")
                 self.timerOn = False
                 return
+    '''     
     def duel(self):
         #Oncree un popup
         fInfos = Toplevel()          # Popup -> Toplevel()
@@ -177,7 +176,7 @@ class Application(Frame):
         fInfos.transient(self)       # Reduction popup impossible 
         fInfos.grab_set()          # Interaction avec fenetre jeu impossible
         self.wait_window(fInfos)   # Arret script principal
-        
+    '''
     
     def createWidgets(self):
         #Les boutons pour les chiffres initiaux et ceux qui seront crees au fur et a mesue
@@ -211,8 +210,6 @@ class Application(Frame):
         self.boutonAbandonner.grid(row = 2,column = 9,columnspan = 4, sticky = E+W)
         self.boutonValider = Button(self, text="Valider",command=self.valider)
         self.boutonValider.grid(row = 3,column = 9,columnspan = 4, sticky = E+W)
-        self.boutonFight = Button(self, text="C'est l'heure du du-du-du-duel",command=self.duel)
-        self.boutonFight.grid(row = 3,column = 2,columnspan = 6, sticky = E+W)
         #Les labels de l'historique des operations et le bouton pour evenir en arriere
         self.historique = []
         self.resultatHistorique = []
@@ -242,7 +239,53 @@ class Application(Frame):
         self.labelTimerActu = Label(self,text="0.00")
         self.labelTimerActu.grid(row = 1,column = 11,columnspan = 2, sticky = E+W)
           
+    def trouveMulti(self):
+        self.timerOn = False
+        self.boutonRetour.config(state=DISABLED)
+        self.boutonsOperateurs[5].config(state=DISABLED)
+        self.annuler()
+        self.annuler()
+        self.annuler()
+        self.annuler()
+        self.annuler()
+        for i in range(6):
+            self.boutonsChiffres[i]['command'] = partial(self.addChiffreMulti,i)
+            self.boutonsChiffres[i+6]['command'] = partial(self.addChiffreMulti,i+6)
+        for i in range(4):
+            self.boutonsOperateurs[i]['command'] = partial(self.addOpMulti,i)
+        self.boutonAbandonner['command'] = self.failProof
+        self.boutonsOperateurs[4]['command'] = self.preuve
+        IvySendMsg("trouve")
         
+    def addChiffreMulti(self,i):
+        self.addChiffre(i)
+        IvySendMsg("play:"+str(i))    
+    
+    def addOpMulti(self,i):
+        self.addOp(i)
+        IvySendMsg("play:"+str(self.boutonsOperateurs[i]['text']))
+        
+    def preuve(self):
+        self.calculer()
+        IvySendMsg("compute")
+        
+    def failProof(self):
+        IvySendMsg("Votre adversaire gagne le point")
+        
+    def watch_mode(self):
+        self.timerOn = False
+        self.boutonRetour.config(state=DISABLED)
+        self.boutonValider.config(state=DISABLED)
+        self.annuler()
+        self.annuler()
+        self.annuler()
+        self.annuler()
+        self.annuler()
+        for i in range(6):
+            self.boutonsChiffres[i].config(state=DISABLED)
+            self.boutonsChiffres[i+6].config(state=DISABLED)
+            self.boutonsOperateurs[i].config(state=DISABLED) 
+    
     def periodicCall(self):
         """
         Check every 100 ms if there is something new in the queue.
@@ -256,6 +299,39 @@ class Application(Frame):
                 for i in range(6):
                     nombresRaw[i] = int(nombresRaw[i])
                 self.recupModele(nombresRaw, N)
+                self.labelModeActu['text'] = "Multijoueur"
+                self.boutonValider['command'] = self.trouveMulti
+            elif(action[:4] == "deco"):
+                self.labelModeActu['text'] = "Entrainement"
+                self.boutonRetour.config(state=NORMAL)
+                self.boutonValider.config(state=NORMAL)
+                self.boutonValider['command'] = self.valider
+                self.boutonAbandonner['command'] = self.abandon
+                for i in range(6):
+                    self.boutonsChiffres[i].config(state=NORMAL)
+                    self.boutonsOperateurs[i].config(state=NORMAL) 
+                self.reset()
+            elif(action[:5] == "watch"):
+                self.watch_mode()
+            elif(action[:3] == "op:"):
+                i=0
+                if(action[3] == "+"):
+                    i = 0
+                elif(action[3] == "-"):
+                    i = 1
+                elif(action[3] == "*"):
+                    i = 2
+                elif(action[3] == "/"):
+                    i = 3
+                self.addOp(i)
+            elif(action[:7] == "nombre:"):
+                i = int(action[7:])
+                self.addChiffre(i)
+            elif(action == "compute"):
+                self.calculer()
+                for i in range(6):
+                    self.boutonsChiffres[i].config(state=DISABLED)
+                    self.boutonsChiffres[i+6].config(state=DISABLED) 
             else:
                 print(action)
             

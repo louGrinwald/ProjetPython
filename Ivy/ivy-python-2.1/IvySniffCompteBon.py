@@ -44,7 +44,7 @@ Type '.help' in ivyprobe for a list of available commands.'''
 def on_connection_change(agent, event):
     if event == IvyApplicationDisconnected :
         info('Votre adversaire s est deconnecte : %r', agent)
-        '''--------------------------------ICI GERER LA DECO------------------------------------'''
+        app.queue.put("deco")
     else:
         IvySendMsg("choose_player:"+str(rnd))
         '''patate = info('Un adversaire s est connecte : %r', agent)
@@ -58,7 +58,6 @@ def on_connection_change(agent, event):
         print(patate2[41:-13])
         if(int(patate[41:-13])):
             joueur = 1'''
-        '''---------------------------------SETUP LE DUEL ICI--------------------------------------------'''
     info('Ivy applications currently on the bus: %s',
          ','.join(IvyGetApplicationList()))
     
@@ -80,20 +79,21 @@ def on_regexp_change(agent, event, regexp_id, regexp):
             regexp_id, regexp)
 
 def on_trouve(agent, *arg):
-    colonne = int(arg[0])
-    if(colonne < 8):
-        info("Votre adversaire a joue sur la colonne : " + arg[0])
-        info('A vous de jouer, entrez une colonne entre 1 et 7')
-         #appeler l'adaptateur
-        info('Sent to %s peers'%IvySendMsg("C est a votre adversaire de jouer"))
-    else:
-        info('Sent to %s peers'%IvySendMsg('Cette colonne n est pas valide'))
-        info('Sent to %s peers'%IvySendMsg('A vous de jouer, entrez une colonne entre 1 et 7 (exemple : colonne : 5)'))
+    app.queue.put("watch")
         
 def on_play(agent, *arg):
+    op = str(arg[0])[5]
     
-    info("Vous avez gagne")
-    info('Sent to %s peers'%IvySendMsg('Vous avez perdu'))
+    if(op in "-*/+"):
+        app.queue.put("op:"+op)
+    else:
+        app.queue.put("nombre:"+str(arg[0])[5:])
+    
+def on_compute(agent, *arg):
+    app.queue.put("compute")
+    
+def on_erase(agent, *arg):
+    app.queue.put("erase")
     
 def on_fail(agent, *arg):
     info("Vous avez gagne")
@@ -109,7 +109,6 @@ def on_start(agent, *arg):
     IvySendMsg('Que la partie commence !')
     
 def on_choose_player(agent, *larg):
-    info( "Received %s ", larg[0])
     nombre = int(str(larg[0])[14:])
     global rnd
     if(rnd > nombre):
@@ -334,14 +333,18 @@ if __name__ == '__main__':
     '''
     Les messages valides sont :
     trouve                     quand un joueur pense avoir trouve la solution
-    play:3+5=8                 lors de la verification -> affichage
+    play:3 / play:+            lors du mode attente -> affichage
+    compute                    declencher le calcul lors ud mode attente
+    erase                      declencher le bouton C lors ud mode attente
     start:N,C1,C2,C3,C4,C5,C6  au debut pour donner le modele
     timer_end                  lorsque le timer tombe a 0
     fail                        le joueur n'a pas reussi a ptrouver son nombre
     choose_player               determine qui est le joueur 1
     '''
     IvyBindMsg(on_trouve, '^trouve$')
-    IvyBindMsg(on_play, '^(play:[0-9]*[+\-*\/][0-9]*=[0-9]*)$')
+    IvyBindMsg(on_play, '^(play:[0-9+\-*\/]*)$')
+    IvyBindMsg(on_compute, '^compute$')
+    IvyBindMsg(on_erase,'^erase$')
     IvyBindMsg(on_start, '^(start:[0-9]*,[0-9]*,[0-9]*,[0-9]*,[0-9]*,[0-9]*,[0-9]*)$')
     IvyBindMsg(on_timer_end, '^timer_end$')
     IvyBindMsg(on_fail, '^fail$')
