@@ -1,0 +1,22 @@
+Metadata-Version: 1.0
+Name: ivy-python
+Version: 2.1
+Summary: Ivy: a lightweight software bus
+Home-page: http://www.tls.cena.fr/products/ivy/
+Author: Sebastien Bigaret
+Author-email: sebastien.bigaret@telecom-bretagne.eu
+License: BSD License
+Download-URL: http://www.tls.cena.fr/products/ivy/download/packages/ivy-python-2.1.tar.gz
+Description: Ivy is a lightweight software bus for quick-prototyping protocols. It allows
+        applications to broadcast information through text messages, with a
+        subscription mechanism based on regular expressions.
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Natural Language :: English
+Classifier: Natural Language :: French
+Classifier: Topic :: Software Development :: Libraries :: Python Modules

@@ -1,0 +1,1226 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>ivy.ivy.IvyServer</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ivy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.tls.cena.fr/products/ivy/">ivy-python: a python library for the Ivy software bus</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="ivy-module.html">Package&nbsp;ivy</a> ::
+        <a href="ivy.ivy-module.html">Module&nbsp;ivy</a> ::
+        Class&nbsp;IvyServer
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="ivy.ivy.IvyServer-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class IvyServer</h1><p class="nomargin-top"><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer">source&nbsp;code</a></span></p>
+<pre class="base-tree">
+SocketServer.ThreadingMixIn --+    
+                              |    
+SocketServer.BaseServer --+   |    
+                          |   |    
+     SocketServer.TCPServer --+    
+                              |    
+SocketServer.ThreadingTCPServer --+
+                                  |
+                 object --+       |
+                          |       |
+         threading._Verbose --+   |
+                              |   |
+               threading.Thread --+
+                                  |
+                                 <strong class="uidshort">IvyServer</strong>
+</pre>
+
+<hr />
+<p>An Ivy server is responsible for receiving and handling the messages
+that other clients send on an Ivy bus to a given agent.</p>
+<p>An IvyServer has two important attributes: <a href="ivy.ivy.IvyServer-class.html#usesDaemons" class="link">usesDaemons</a> and
+<a href="ivy.ivy.IvyServer-class.html#server_termination" class="link">server_termination</a>.</p>
+<div class="rst-section">
+<h1 class="heading"><a id="rst-mt-safety" name="rst-mt-safety">MT-safety</a></h1>
+<p>All public methods (not starting with an underscore <tt class="rst-docutils literal"><span class="pre">_</span></tt>) are
+MT-safe</p>
+</div>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">agent_name</span>,
+        <span class="summary-sig-arg">ready_msg</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>,
+        <span class="summary-sig-arg">app_callback</span>=<span class="summary-sig-default">&lt;function void_function at 0xb7964764&gt;</span>,
+        <span class="summary-sig-arg">die_callback</span>=<span class="summary-sig-default">&lt;function void_function at 0xb7964764&gt;</span>,
+        <span class="summary-sig-arg">usesDaemons</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Builds a new IvyServer.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#serve_forever" class="summary-sig-name">serve_forever</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Handle requests (calling handle_request()) until doomsday...</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.serve_forever">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#handle_new_client" class="summary-sig-name">handle_new_client</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">client</span>)</span><br />
+      finalisation de la connection avec le client
+TODO: peut-etre ajouter un flag (en cours de cnx) sur le client,
+qui empecherait l'envoi de msg.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.handle_new_client">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="handle_die_message"></a><span class="summary-sig-name">handle_die_message</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">msg_id</span>,
+        <span class="summary-sig-arg">from_client</span>=<span class="summary-sig-default">None</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.handle_die_message">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="handle_direct_msg"></a><span class="summary-sig-name">handle_direct_msg</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">client</span>,
+        <span class="summary-sig-arg">num_id</span>,
+        <span class="summary-sig-arg">msg</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.handle_direct_msg">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="handle_regexp_change"></a><span class="summary-sig-name">handle_regexp_change</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">client</span>,
+        <span class="summary-sig-arg">event</span>,
+        <span class="summary-sig-arg">id</span>,
+        <span class="summary-sig-arg">regexp</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.handle_regexp_change">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#remove_client" class="summary-sig-name">remove_client</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">ip</span>,
+        <span class="summary-sig-arg">port</span>,
+        <span class="summary-sig-arg">trigger_application_callback</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Removes a registered client</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.remove_client">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="bind_direct_msg"></a><span class="summary-sig-name">bind_direct_msg</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">on_direct_msg_fct</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.bind_direct_msg">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="bind_regexp_change"></a><span class="summary-sig-name">bind_regexp_change</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">on_regexp_change_callback</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.bind_regexp_change">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>SocketServer.ThreadingMixIn</code></b>:
+      <code>process_request</code>,
+      <code>process_request_thread</code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>SocketServer.TCPServer</code></b>:
+      <code>close_request</code>,
+      <code>fileno</code>,
+      <code>get_request</code>,
+      <code>server_activate</code>,
+      <code>server_bind</code>,
+      <code>server_close</code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>SocketServer.BaseServer</code></b>:
+      <code>finish_request</code>,
+      <code>handle_error</code>,
+      <code>handle_request</code>,
+      <code>verify_request</code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>threading.Thread</code></b>:
+      <code>__repr__</code>,
+      <code>getName</code>,
+      <code>isAlive</code>,
+      <code>isDaemon</code>,
+      <code>join</code>,
+      <code>run</code>,
+      <code>setDaemon</code>,
+      <code>setName</code>
+      </p>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code>threading.Thread</code></b> (private):
+      <code>_set_daemon</code>
+      </p></div>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code>threading._Verbose</code></b> (private):
+      <code>_note</code>
+      </p></div>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__setattr__</code>,
+      <code>__str__</code>
+      </p>
+    </td>
+  </tr>
+<tr bgcolor="#e8f0f8" >
+  <th colspan="2" class="group-header"
+    >&nbsp;&nbsp;&nbsp;&nbsp;Communication on the ivybus</th></tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#start" class="summary-sig-name">start</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">ivybus</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Binds the server to the ivybus.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.start">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#stop" class="summary-sig-name">stop</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Disconnects the server from the ivybus.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.stop">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#send_msg" class="summary-sig-name">send_msg</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">message</span>)</span><br />
+      Examine the message and choose to send a message to the clients
+that subscribed to such a msg</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.send_msg">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="send_direct_message"></a><span class="summary-sig-name">send_direct_message</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">agent_name</span>,
+        <span class="summary-sig-arg">num_id</span>,
+        <span class="summary-sig-arg">msg</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.send_direct_message">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="send_ready_message"></a><span class="summary-sig-name">send_ready_message</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">client</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.send_ready_message">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="handle_msg"></a><span class="summary-sig-name">handle_msg</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">client</span>,
+        <span class="summary-sig-arg">idx</span>,
+        <span class="summary-sig-arg">*params</span>)</span><br />
+      Simply call the function bound to the subscription id <code class="link">idx</code> with
+the supplied parameters.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.handle_msg">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr bgcolor="#e8f0f8" >
+  <th colspan="2" class="group-header"
+    >&nbsp;&nbsp;&nbsp;&nbsp;Inspecting the ivybus</th></tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#get_clients" class="summary-sig-name">get_clients</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Returns the list of the agent names of all connected clients</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.get_clients">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#_get_client" class="summary-sig-name" onclick="show_private();">_get_client</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">ip</span>,
+        <span class="summary-sig-arg">port</span>,
+        <span class="summary-sig-arg">socket</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">agent_id</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">agent_name</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Returns the corresponding client, and create a new one if needed.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer._get_client">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#get_client_with_name" class="summary-sig-name">get_client_with_name</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>)</span><br />
+      Returns the list of the clients registered with a given agent-name</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.get_client_with_name">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr bgcolor="#e8f0f8" >
+  <th colspan="2" class="group-header"
+    >&nbsp;&nbsp;&nbsp;&nbsp;Our own subscriptions</th></tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#_add_subscription" class="summary-sig-name" onclick="show_private();">_add_subscription</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">regexp</span>,
+        <span class="summary-sig-arg">fct</span>)</span><br />
+      Registers a new regexp and binds it to the supplied fct.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer._add_subscription">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#_remove_subscription" class="summary-sig-name" onclick="show_private();">_remove_subscription</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">idx</span>)</span><br />
+      Unregisters the corresponding regexp</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer._remove_subscription">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_get_fct_for_subscription"></a><span class="summary-sig-name">_get_fct_for_subscription</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">idx</span>)</span><br />
+      this method is not MT-safe, callers must acquire the
+global lock</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer._get_fct_for_subscription">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_subscriptions"></a><span class="summary-sig-name">get_subscriptions</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.get_subscriptions">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#bind_msg" class="summary-sig-name">bind_msg</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">on_msg_fct</span>,
+        <span class="summary-sig-arg">regexp</span>)</span><br />
+      Registers a new subscriptions, by binding a regexp to a function, so
+that this function is called whenever a message matching the regexp
+is received.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.bind_msg">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ivy.ivy.IvyServer-class.html#unbind_msg" class="summary-sig-name">unbind_msg</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">id</span>)</span><br />
+      Unbinds a subscription</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.unbind_msg">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>SocketServer.ThreadingMixIn</code></b>:
+      <code>daemon_threads</code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>SocketServer.TCPServer</code></b>:
+      <code>address_family</code>,
+      <code>allow_reuse_address</code>,
+      <code>request_queue_size</code>,
+      <code>socket_type</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== INSTANCE VARIABLES ==================== -->
+<a name="section-InstanceVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="port"></a><span class="summary-name">port</span><br />
+      tells on which port the TCP server awaits connection
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ivy.ivy.IvyServer-class.html#server_termination" class="summary-name">server_termination</a><br />
+      a <code class="link">threading.Event</code> object that is set on server shutdown.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ivy.ivy.IvyServer-class.html#usesDaemons" class="summary-name">usesDaemons</a><br />
+      whether the threads are daemonic or not.
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">agent_name</span>,
+        <span class="sig-arg">ready_msg</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string"></code><code class="variable-quote">'</code></span>,
+        <span class="sig-arg">app_callback</span>=<span class="sig-default">&lt;function void_function at 0xb7964764&gt;</span>,
+        <span class="sig-arg">die_callback</span>=<span class="sig-default">&lt;function void_function at 0xb7964764&gt;</span>,
+        <span class="sig-arg">usesDaemons</span>=<span class="sig-default">False</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Builds a new IvyServer.  A client only needs to call <a href="ivy.ivy.IvyServer-class.html#start" class="link">start()</a> on the
+newly created instances to connect to the corresponding Ivy bus and to
+start communicating with other applications.</p>
+<p>MT-safety: both functions <code class="link">app_callback</code> and <code class="link">die_callback</code> must be
+prepared to be called concurrently</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>agent_name</code></strong> - the client's agent name</li>
+        <li><strong class="pname"><code>ready_msg</code></strong> - a message to send to clients when they connect</li>
+        <li><strong class="pname"><code>app_callback</code></strong> - a function called each time a client connects or
+disconnects. This function is called with a single parameter
+indicating which event occured: <a href="ivy.ivy-module.html#IvyApplicationConnected" class="link">IvyApplicationConnected</a> or
+<a href="ivy.ivy-module.html#IvyApplicationDisconnected" class="link">IvyApplicationDisconnected</a>.</li>
+        <li><strong class="pname"><code>die_callback</code></strong> - called when the IvyServer receives a DIE message</li>
+        <li><strong class="pname"><code>usesDaemons</code></strong> - see above.</li>
+    </ul></dd>
+    <dt>Overrides:
+        object.__init__
+    </dt>
+  </dl>
+<div class="fields">      <p><strong>See Also:</strong>
+        <a href="ivy.ivy.IvyServer-class.html#bind_msg" class="link">bind_msg()</a>, <a href="ivy.ivy.IvyServer-class.html#start" class="link">start()</a>
+      </p>
+</div></td></tr></table>
+</div>
+<a name="serve_forever"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">serve_forever</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.serve_forever">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Handle requests (calling handle_request()) until doomsday... or
+until <a href="ivy.ivy.IvyServer-class.html#stop" class="link">stop()</a> is called.</p>
+<p>This method is registered as the target method for the thread.
+It is also responsible for launching the UDP server in a separate
+thread, see <a href="ivy.ivy-module.html#UDP_init_and_listen" class="link">UDP_init_and_listen</a> for details.</p>
+<p>You should not need to call this method, use <a href="ivy.ivy.IvyServer-class.html#start" class="link">start</a> instead.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        SocketServer.BaseServer.serve_forever
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="start"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">start</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">ivybus</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.start">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  Binds the server to the ivybus. The server remains connected until
+<a href="ivy.ivy.IvyServer-class.html#stop" class="link">stop</a> is called, or
+  <dl class="fields">
+    <dt>Overrides:
+        threading.Thread.start
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="stop"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">stop</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.stop">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  Disconnects the server from the ivybus. It also sets the
+<a href="ivy.ivy.IvyServer-class.html#server_termination" class="link">server_termination</a> event.
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_clients"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_clients</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.get_clients">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  Returns the list of the agent names of all connected clients
+  <dl class="fields">
+  </dl>
+<div class="fields">      <p><strong>See Also:</strong>
+        get_client_with_name
+      </p>
+</div></td></tr></table>
+</div>
+<a name="_get_client"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_get_client</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">ip</span>,
+        <span class="sig-arg">port</span>,
+        <span class="sig-arg">socket</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">agent_id</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">agent_name</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer._get_client">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Returns the corresponding client, and create a new one if needed.</p>
+<p>If agent_id is not None, the method checks whether a client with the
+same id is already registered; if it exists, the method exits by
+returning None.</p>
+<p>You should not need to call this, use <a href="ivy.ivy.IvyServer-class.html#get_client_with_name" class="link">get_client_with_name</a> instead</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_client_with_name"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_client_with_name</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.get_client_with_name">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  Returns the list of the clients registered with a given agent-name
+  <dl class="fields">
+  </dl>
+<div class="fields">      <p><strong>See Also:</strong>
+        get_clients
+      </p>
+</div></td></tr></table>
+</div>
+<a name="handle_new_client"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">handle_new_client</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">client</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.handle_new_client">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  finalisation de la connection avec le client
+TODO: peut-etre ajouter un flag (en cours de cnx) sur le client,
+qui empecherait l'envoi de msg. etc. tant que la cnx. n'est pas
+confirmee
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="remove_client"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">remove_client</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">ip</span>,
+        <span class="sig-arg">port</span>,
+        <span class="sig-arg">trigger_application_callback</span>=<span class="sig-default">True</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.remove_client">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Removes a registered client</p>
+<p>This method is responsible for calling <tt class="rst-docutils literal"><span class="pre">server.app_callback</span></tt></p>
+<div class="rst-note">
+<p class="rst-first rst-admonition-title">Note</p>
+<p class="rst-last">NO NETWORK CLEANUP IS DONE</p>
+</div>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>the removed client, or None if no such client was found</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="send_msg"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">send_msg</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">message</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.send_msg">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  Examine the message and choose to send a message to the clients
+that subscribed to such a msg
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>the number of clients to which the message was sent</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_add_subscription"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_add_subscription</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">regexp</span>,
+        <span class="sig-arg">fct</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer._add_subscription">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  Registers a new regexp and binds it to the supplied fct. The id
+assigned to the subscription and returned by method is <strong>unique</strong>
+to that subscription for the life-time of the server object: even in
+the case when a subscription is unregistered, its id will _never_
+be assigned to another subscription.
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>the unique id for that subscription</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_remove_subscription"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_remove_subscription</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">idx</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer._remove_subscription">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Unregisters the corresponding regexp</p>
+<div class="rst-warning">
+<p class="rst-first rst-admonition-title">Warning</p>
+<p class="rst-last">this method is not MT-safe, callers must acquire the
+global lock</p>
+</div>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>the regexp that has been removed</dd>
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'>KeyError</strong></code> - if no such subscription can be found</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="bind_msg"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">bind_msg</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">on_msg_fct</span>,
+        <span class="sig-arg">regexp</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.bind_msg">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  Registers a new subscriptions, by binding a regexp to a function, so
+that this function is called whenever a message matching the regexp
+is received.
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><p><strong class="pname"><code>on_msg_fct</code></strong> - a function accepting as many parameters as there is
+groups in the regexp. For example:</p>
+<ul class="rst-simple">
+<li>the regexp <tt class="rst-docutils literal"><span class="pre">'^hello</span> <span class="pre">.*'</span></tt> corresponds to a function called w/ no
+parameter,</li>
+<li><tt class="rst-docutils literal"><span class="pre">'^hello</span> <span class="pre">(.*)'</span></tt>: one parameter,</li>
+<li><tt class="rst-docutils literal"><span class="pre">'^hello=([^</span> <span class="pre">]*)</span> <span class="pre">from=([^</span> <span class="pre">]*)'</span></tt>: two parameters</li>
+</ul></li>
+        <li><strong class="pname"><code>regexp</code></strong> - (string) a regular expression</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>the binding's id, which can be used to unregister the binding
+with <a href="ivy.ivy.IvyServer-class.html#unbind_msg" class="link">unbind_msg()</a></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="unbind_msg"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unbind_msg</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ivy.ivy-pysrc.html#IvyServer.unbind_msg">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  Unbinds a subscription
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>id</code></strong> - the binding's id, as returned by <a href="ivy.ivy.IvyServer-class.html#bind_msg" class="link">bind_msg()</a></li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>the regexp corresponding to the unsubscribed binding</dd>
+    <dt>Raises:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code><strong class='fraise'>KeyError</strong></code> - if no such subscription can be found</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== INSTANCE VARIABLE DETAILS ==================== -->
+<a name="section-InstanceVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="server_termination"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">server_termination</h3>
+  a <code class="link">threading.Event</code> object that is set on server shutdown.  It can be
+used either to test whether the server has been stopped
+(<tt class="rst-docutils literal"><span class="pre">server_termination.isSet()</span></tt>) or to wait until it is stopped
+(<tt class="rst-docutils literal"><span class="pre">server_termination.wait()</span></tt>).  Application code should not try to set
+the Event directly, rather it will call <a href="ivy.ivy.IvyServer-class.html#stop" class="link">stop()</a> to terminate the
+server.
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="usesDaemons"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">usesDaemons</h3>
+  whether the threads are daemonic or not.  Daemonic
+threads do not prevent python from exiting when the main thread stop,
+while non-daemonic ones do.  Default is False.  This attribute should
+be set through at <a href="ivy.ivy.IvyServer-class.html#__init__" class="link">__init__()</a> time and should not be modified
+afterwards.
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ivy-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://www.tls.cena.fr/products/ivy/">ivy-python: a python library for the Ivy software bus</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Tue Jun 10 18:21:20 2008
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
