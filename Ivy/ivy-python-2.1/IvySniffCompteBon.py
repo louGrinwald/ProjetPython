@@ -15,6 +15,10 @@ app = Application(root)
 #ces valeurs determinent qui est le joueur 1 et le joueur 2
 joueur = 0
 rnd = randint(0,100)
+#Dans le cas ou les joueurs entrent le chiffre qu'ils peuvent atteindre, celui de l'adversaire est stocke 
+bestAdv = -1
+#On stocke le N courant pour ne pas avoir a le renseigner plus tard
+NCourant = -1
 
 try:
     import readline
@@ -67,6 +71,9 @@ def on_regexp_change(agent, event, regexp_id, regexp):
             regexp_id, regexp)
 
 def on_trouve(agent, *arg):
+    comm = str(arg[0])
+    if(len(comm) > 6):
+        app.queue.put("best_number:"+comm[7:])
     app.queue.put("watch")
         
 def on_play(agent, *arg):
@@ -99,6 +106,9 @@ def on_timer_end(agent, *arg):
     info('Sent to %s peers'%IvySendMsg('Vous avez perdu'))
     
 def on_start(agent, *arg):
+    global NCourant
+    nombresRaw = re.findall('\d+', str(arg[0]))
+    NCourant = int(nombresRaw[0])
     app.queue.put(str(arg[0]))
     info("Que la partie commence !")
     IvySendMsg('Que la partie commence !')
@@ -123,6 +133,10 @@ def on_new_game(agent, *larg):
         modele = CompteBon()
         nombres = modele.choisis
         N = modele.total
+        global NCourant
+        NCourant = N
+        global bestAdv
+        bestAdv = -1
         #On prepare la chaine de caracteres
         commande = "start:"+str(N)+","
         for i in range(6):
@@ -138,6 +152,35 @@ def on_new_game(agent, *larg):
         
 def on_timer(agent, *arg):
     app.queue.put(str(arg[0]))
+    
+def on_bestAdv(agent, *arg):
+    global bestAdv
+    bestAdv = int(str(arg[0])[8:])
+    IvySendMsg("best:"+str(bestAdv))
+    
+def on_best(agent, *arg):
+    global bestAdv
+    global NCourant
+    if(bestAdv != -1):
+        best = int(str(arg[0])[5:])
+        diffBest = abs(best - NCourant)
+        diffBestAdv = abs(bestAdv - NCourant)
+        print("diffBest : "+str(diffBest)+", diffBestAdv : "+str(diffBestAdv))
+        if(diffBestAdv > diffBest):
+            app.queue.put("best_number:"+str(best))
+            app.queue.put("proof")
+            IvySendMsg("trouve:"+str(best))
+        elif(diffBestAdv == diffBest):
+            print("egalite")
+        elif(diffBestAdv < diffBest):
+            on_trouve(agent,"trouve:"+str(bestAdv))
+            IvySendMsg("proof:"+str(bestAdv))
+        else:
+            print(str(diffBestAdv)+","+str(diffBest))
+
+def on_proof(agent, *arg):
+    app.queue.put("best_number:"+str(arg[0])[6:])
+    app.queue.put("proof")
 
 def on_any(agent, *larg):
     info( "%s ", larg[0])
@@ -339,7 +382,7 @@ if __name__ == '__main__':
         
     '''
     Les messages valides sont :
-    trouve                     quand un joueur pense avoir trouve la solution
+    trouve(:452)               quand un joueur pense avoir trouve la solution, le nombre est seulement precise si le timer s'est ecoule
     play:3 / play:+            lors du mode attente -> affichage d'un chiffre ou operateur
     compute                    declencher le calcul lors ud mode attente
     erase                      declencher le bouton C lors ud mode attente
@@ -351,9 +394,12 @@ if __name__ == '__main__':
     new_game                    genere un modele pour une nouvelle partie multijoueur
     kill                        pour tuer l'autre apllication
     timer:25,2                  Si on change le timer (secs,mins)
+    bestAdv:452                 Indique le meilleur chiffre que votre adversaire peut atteindre
+    best:452                    Indique le meilleur chiffre que vous pouvez atteindre
+    proof:452                   Vous devez prouvez ce chiffre
     Tout autre message sera simplement affiche dans la console
     '''
-    IvyBindMsg(on_trouve, '^trouve$')
+    IvyBindMsg(on_trouve, '^(trouve:?[0-9]*?)$')
     IvyBindMsg(on_play, '^(play:[0-9+\-*\/]*)$')
     IvyBindMsg(on_compute, '^compute$')
     IvyBindMsg(on_erase,'^erase$')
@@ -365,6 +411,9 @@ if __name__ == '__main__':
     IvyBindMsg(on_new_game, '^new_game$')
     IvyBindMsg(on_kill, '^kill$')
     IvyBindMsg(on_timer, '^(timer:[0-9]*,[0-9]*)$')
+    IvyBindMsg(on_bestAdv, '^(bestAdv:[0-9]*)$')
+    IvyBindMsg(on_best, '^(best:[0-9]*)$')
+    IvyBindMsg(on_proof, '^(proof:[0-9]*)$')
     IvyBindMsg(on_die, '^die$')
     IvyBindMsg(on_any, "(.*)")
 

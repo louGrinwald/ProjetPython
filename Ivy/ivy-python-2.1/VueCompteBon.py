@@ -17,7 +17,7 @@ class Application(Frame):
         self.createWidgets()
         self.modele = CompteBon()
         self.recupModele(self.modele.choisis, self.modele.total)
-        self.timerOn = True
+        self.timerOn = False
         self.timerBase = datetime.timedelta(seconds=15)
         self.startTime = datetime.datetime.now() + self.timerBase
         self.running = 1
@@ -138,8 +138,6 @@ class Application(Frame):
         self.boutonsHistorique.clear()
         self.nextFreeButton = 6
         self.cleanLabel()
-        self.startTime = datetime.datetime.now() + self.timerBase
-        self.timerOn = True
     
     def generate(self):
         self.modele = CompteBon()
@@ -246,7 +244,7 @@ class Application(Frame):
         #On cree deja  un tableau pour labels du multijoueur, on l'utilisera plu stard
         self.labelScore = []
           
-    def trouveMulti(self):
+    def proofMode(self):
         self.timerOn = False
         self.boutonRetour.config(state=DISABLED)
         self.boutonAbandonner.config(state=NORMAL)
@@ -265,7 +263,9 @@ class Application(Frame):
         self.boutonValider['command'] = self.validerMulti
         self.boutonAbandonner['command'] = self.failProof
         self.boutonsOperateurs[4]['command'] = self.preuve
-        IvySendMsg("trouve")
+        
+    def trouveMulti(self):
+        self.proofMode()
         
     def addChiffreMulti(self,i):
         self.addChiffre(i)
@@ -277,16 +277,18 @@ class Application(Frame):
         
     def validerMulti(self):
         for i in range(self.nextFreeButton):
-            if(self.labelN['text'] == self.boutonsChiffres[i]['text']):
+            if(int(self.labelN['text']) == int(self.boutonsChiffres[i]['text'])):
                 IvySendMsg("success")
                 self.addPoint(0)
-        
+                
     def quitMulti(self):
         IvySendMsg("kill")
         self.resetToSinglePlayer()
         
     def resetToSinglePlayer(self):
+        self.timerOn =  False
         self.labelModeActu['text'] = "Entrainement"
+        self.labelTimerActu['text'] = "0.00"
         self.boutonRetour.config(state=NORMAL)
         self.boutonValider.config(state=NORMAL)
         self.boutonAbandonner.config(state=NORMAL)
@@ -330,6 +332,26 @@ class Application(Frame):
             self.boutonsChiffres[i+6].config(state=DISABLED)
             self.boutonsOperateurs[i].config(state=DISABLED) 
     
+    def popupChiffre(self):
+        #On cree un popup
+        fInfos = Toplevel()          # Popup -> Toplevel()
+        fInfos.title('Popup')
+        label = Label(fInfos, text="Entrez le chiffre le plus proche que vous avez trouve")
+        label.grid(row = 0,column = 0)
+        fInfos.entryBest = Entry(fInfos)
+        fInfos.entryBest.grid(row = 1,column = 0, sticky = E+W)
+        valider = Button(fInfos, text='Valider', command=partial(self.validerBest,fInfos))
+        valider.grid(row = 2,column = 0, sticky = E+W)
+        fInfos.transient(self)       # Reduction popup impossible 
+        fInfos.grab_set()          # Interaction avec fenetre jeu impossible
+        self.wait_window(fInfos)   # Arret script principal
+        
+    def validerBest(self, fInfos):
+        chiffre = fInfos.entryBest.get()
+        if(chiffre.isdigit()):
+            IvySendMsg("bestAdv:"+chiffre)
+            fInfos.destroy()
+    
     def periodicCall(self):
         """
         Check every 100 ms if there is something new in the queue.
@@ -338,6 +360,8 @@ class Application(Frame):
             action = self.queue.get()
             if(action[:6] == "start:"):
                 self.reset()
+                self.startTime = datetime.datetime.now() + self.timerBase
+                self.timerOn = True
                 self.boutonValider.config(state=NORMAL)
                 self.boutonRetour.config(state=NORMAL)
                 nombresRaw = re.findall('\d+', action)
@@ -406,6 +430,10 @@ class Application(Frame):
                 nombresRaw = re.findall('\d+', action)
                 self.timerBase = datetime.timedelta(seconds=int(nombresRaw[0]),minutes=int(nombresRaw[1]))
                 print("Votre adversaire a change le timer : "+nombresRaw[0]+"s, "+nombresRaw[1]+" mins")
+            elif(action == "proof"):
+                self.proofMode()
+            elif(action[:12] == "best_number:"):
+                self.labelN['text'] = action[12:]
             else:
                 print(action)
             
@@ -413,6 +441,9 @@ class Application(Frame):
             difference = self.startTime.replace(microsecond=0) - datetime.datetime.now().replace(microsecond=0)
             if(difference >= datetime.timedelta(seconds=0)):
                 self.labelTimerActu.configure(text=difference)
+            else:
+                self.timerOn = False
+                self.popupChiffre()
         
         if not self.running:
             # This is the brutal stop of the system. You may want to do
