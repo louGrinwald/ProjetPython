@@ -18,7 +18,7 @@ class Application(Frame):
         self.modele = CompteBon()
         self.recupModele(self.modele.choisis, self.modele.total)
         self.timerOn = False
-        self.timerBase = datetime.timedelta(seconds=15)
+        self.timerBase = datetime.timedelta(seconds=45)
         self.startTime = datetime.datetime.now() + self.timerBase
         self.running = 1
         # Start the periodic call in the GUI
@@ -239,7 +239,7 @@ class Application(Frame):
         self.labelModeActu.grid(row = 0,column = 11,columnspan = 2, sticky = E+W)
         self.labelTimer = Label(self,text="Timer : ")
         self.labelTimer.grid(row = 1,column = 9,columnspan = 2, sticky = E+W)
-        self.labelTimerActu = Label(self,text="0.00")
+        self.labelTimerActu = Label(self,text="0:00:00")
         self.labelTimerActu.grid(row = 1,column = 11,columnspan = 2, sticky = E+W)
         #On cree deja  un tableau pour labels du multijoueur, on l'utilisera plu stard
         self.labelScore = []
@@ -266,6 +266,7 @@ class Application(Frame):
         
     def trouveMulti(self):
         self.proofMode()
+        IvySendMsg("trouve")
         
     def addChiffreMulti(self,i):
         self.addChiffre(i)
@@ -279,7 +280,6 @@ class Application(Frame):
         for i in range(self.nextFreeButton):
             if(int(self.labelN['text']) == int(self.boutonsChiffres[i]['text'])):
                 IvySendMsg("success")
-                self.addPoint(0)
                 
     def quitMulti(self):
         IvySendMsg("kill")
@@ -288,7 +288,7 @@ class Application(Frame):
     def resetToSinglePlayer(self):
         self.timerOn =  False
         self.labelModeActu['text'] = "Entrainement"
-        self.labelTimerActu['text'] = "0.00"
+        self.labelTimerActu['text'] = "0:00:00"
         self.boutonRetour.config(state=NORMAL)
         self.boutonValider.config(state=NORMAL)
         self.boutonAbandonner.config(state=NORMAL)
@@ -305,7 +305,6 @@ class Application(Frame):
         
     def failProof(self):
         IvySendMsg("fail")
-        self.addPoint(1)
         
     def addPoint(self,i):
         #i = 0 si point pour moi, i= 1 si point pour mon adversaire
@@ -422,15 +421,16 @@ class Application(Frame):
                 for i in range(6):
                     self.boutonsChiffres[i].config(state=DISABLED)
                     self.boutonsChiffres[i+6].config(state=DISABLED)
-            elif(action == "success"):
+            elif(action == "pointHim"):
                 self.addPoint(1)
-            elif(action == "fail"):
+            elif(action == "pointMe"):
                 self.addPoint(0)
             elif(action[:6] == "timer:"):
                 nombresRaw = re.findall('\d+', action)
                 self.timerBase = datetime.timedelta(seconds=int(nombresRaw[0]),minutes=int(nombresRaw[1]))
                 print("Votre adversaire a change le timer : "+nombresRaw[0]+"s, "+nombresRaw[1]+" mins")
             elif(action == "proof"):
+                self.reset()
                 self.proofMode()
             elif(action[:12] == "best_number:"):
                 self.labelN['text'] = action[12:]

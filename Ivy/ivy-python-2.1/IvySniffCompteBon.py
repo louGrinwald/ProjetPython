@@ -15,8 +15,12 @@ app = Application(root)
 #ces valeurs determinent qui est le joueur 1 et le joueur 2
 joueur = 0
 rnd = randint(0,100)
-#Dans le cas ou les joueurs entrent le chiffre qu'ils peuvent atteindre, celui de l'adversaire est stocke 
+#Dans le cas ou les joueurs entrent le chiffre qu'ils peuvent atteindre, ils sont stockes
+best = -1
 bestAdv = -1
+#Un indictauer d'etat pour les egalites
+#2 = egalite, les deux joueurs vont jouer, 1 = egalite, plus qu'un joueur a jouer, 0 = pas d'egalite
+egalite = 0
 #On stocke le N courant pour ne pas avoir a le renseigner plus tard
 NCourant = -1
 
@@ -94,12 +98,39 @@ def on_kill(agent, *arg):
     IvySendMsg("die")
     
 def on_fail(agent, *arg):
-    app.queue.put(str(arg[0]))
-    IvySendMsg("new_game")
+    global egalite
+    global best
+    if(egalite == 2):
+        egalite = 1
+        app.queue.put("best_number:"+str(best))
+        app.queue.put("proof")
+        IvySendMsg("trouve:"+str(best))
+    elif(egalite == 1):
+        egalite = 0
+        IvySendMsg("new_game")
+    else:
+        app.queue.put("pointMe")
+        IvySendMsg("pointHim")
+        IvySendMsg("new_game")
 
 def on_success(agent, *arg):
-    app.queue.put(str(arg[0]))
-    IvySendMsg("new_game")
+    global egalite
+    global best
+    app.queue.put("pointHim")
+    IvySendMsg("pointMe")
+    if(egalite == 2):
+        egalite = 1
+        app.queue.put("best_number:"+str(best))
+        app.queue.put("proof")
+        IvySendMsg("trouve:"+str(best))
+    else:
+        IvySendMsg("new_game")
+        
+def on_pointMe(agent, *arg):
+    app.queue.put("pointMe")
+    
+def on_pointHim(agent, *arg):
+    app.queue.put("pointHim")
     
 def on_timer_end(agent, *arg):
     info("Vous avez gagne")
@@ -137,6 +168,8 @@ def on_new_game(agent, *larg):
         NCourant = N
         global bestAdv
         bestAdv = -1
+        global best
+        best = -1
         #On prepare la chaine de caracteres
         commande = "start:"+str(N)+","
         for i in range(6):
@@ -160,9 +193,12 @@ def on_bestAdv(agent, *arg):
     
 def on_best(agent, *arg):
     global bestAdv
+    global best
     global NCourant
+    global egalite
+    
+    best = int(str(arg[0])[5:])
     if(bestAdv != -1):
-        best = int(str(arg[0])[5:])
         diffBest = abs(best - NCourant)
         diffBestAdv = abs(bestAdv - NCourant)
         print("diffBest : "+str(diffBest)+", diffBestAdv : "+str(diffBestAdv))
@@ -171,12 +207,16 @@ def on_best(agent, *arg):
             app.queue.put("proof")
             IvySendMsg("trouve:"+str(best))
         elif(diffBestAdv == diffBest):
-            print("egalite")
+            egalite = 2
+            on_trouve(agent,"trouve:"+str(bestAdv))
+            IvySendMsg("proof:"+str(bestAdv))
         elif(diffBestAdv < diffBest):
             on_trouve(agent,"trouve:"+str(bestAdv))
             IvySendMsg("proof:"+str(bestAdv))
         else:
             print(str(diffBestAdv)+","+str(diffBest))
+    else:
+        app.queue.put("watch")
 
 def on_proof(agent, *arg):
     app.queue.put("best_number:"+str(arg[0])[6:])
@@ -397,6 +437,8 @@ if __name__ == '__main__':
     bestAdv:452                 Indique le meilleur chiffre que votre adversaire peut atteindre
     best:452                    Indique le meilleur chiffre que vous pouvez atteindre
     proof:452                   Vous devez prouvez ce chiffre
+    pointMe                     Indique que j'ai gagne un point
+    pointHim                    Indique que mon adversaire a gagne un point
     Tout autre message sera simplement affiche dans la console
     '''
     IvyBindMsg(on_trouve, '^(trouve:?[0-9]*?)$')
@@ -414,6 +456,8 @@ if __name__ == '__main__':
     IvyBindMsg(on_bestAdv, '^(bestAdv:[0-9]*)$')
     IvyBindMsg(on_best, '^(best:[0-9]*)$')
     IvyBindMsg(on_proof, '^(proof:[0-9]*)$')
+    IvyBindMsg(on_pointMe, '^pointMe$')
+    IvyBindMsg(on_pointHim, '^pointHim$')
     IvyBindMsg(on_die, '^die$')
     IvyBindMsg(on_any, "(.*)")
 
