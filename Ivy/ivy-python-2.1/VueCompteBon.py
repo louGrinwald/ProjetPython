@@ -166,7 +166,8 @@ class Application(Frame):
         for i in range(self.nextFreeButton):
             if(self.labelN['text'] == self.boutonsChiffres[i]['text']):
                 print("GAGNE")
-                self.timerOn = False
+                self.reset()
+                self.generate()
                 return
     '''     
     def duel(self):
