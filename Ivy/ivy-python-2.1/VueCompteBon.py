@@ -109,7 +109,6 @@ class Application(Frame):
       
     def effacer(self):
         for i in range(self.nextFreeButton):
-            #-----------------------doubles detections ?------------------------
             if(self.labelA['text'] == self.boutonsChiffres[i]['text'] or self.labelB['text'] == self.boutonsChiffres[i]['text']):
                 self.boutonsChiffres[i].config(state= NORMAL)
         self.cleanLabel()
@@ -118,10 +117,64 @@ class Application(Frame):
         choisis = [0,0,0,0,0,0]
         for i in range(6):
              choisis[i] = self.boutonsChiffres[i]['text']
-             
-        if(solve(self.labelN['text'],choisis)):
-            print("Solution : ",self.labelN['text']," = ",format(solve(self.labelN['text'],choisis)[0]))
-        self.trueReset(fInfos)
+        
+        solutions = solve(self.labelN['text'],choisis)
+        if(solutions):
+            solution = format(solutions[0])
+            self.watch_mode()
+            self.boutonAbandonner.config(state=DISABLED)
+            self.boutonValider.config(state=NORMAL)
+            self.boutonValider['command'] = self.nextStepSolution
+            self.boutonValider['text'] = "Suivant"
+            self.nextMove = []
+            self.nextOp = []
+            nombresRaw = re.findall('\d+', solution)
+            boutonsChiffresCopie = []
+            boutonsChiffresCopie2 = []
+            for i in range(6):
+                boutonsChiffresCopie.append(self.boutonsChiffres[i]['text'])
+            for i in range(len(nombresRaw)):
+                for j in range(len(boutonsChiffresCopie)):
+                    if(nombresRaw[i] == str(boutonsChiffresCopie[j])):
+                        self.nextMove.append(int(j))
+                        boutonsChiffresCopie[j] = "-1"
+                        break
+
+            for i in range(len(solution)):
+                if(solution[i] in "+-*/"):
+                    if(solution[i] == "+"):
+                        self.nextOp.append(0)
+                    elif(solution[i] == "-"):
+                        self.nextOp.append(1)
+                    elif(solution[i] == "*"):
+                        self.nextOp.append(2)
+                    elif(solution[i] == "/"):
+                        self.nextOp.append(3)
+            self.firstStep = True
+            fInfos.destroy()
+        else:
+            self.trueReset(fInfos)
+        
+    
+    def nextStepSolution(self):
+        if(self.firstStep):
+            self.addChiffre(self.nextMove.pop(0))
+            self.addChiffre(self.nextMove.pop(0))
+            self.addOp(self.nextOp.pop(0))
+            self.calculer()
+            for i in range(6):
+                self.boutonsChiffres[i+6].config(state=DISABLED)
+            self.firstStep = False
+        else:
+            self.addChiffre(self.nextFreeButton - 1)
+            self.addChiffre(self.nextMove.pop(0))
+            self.addOp(self.nextOp.pop(0))
+            self.calculer()
+            for i in range(6):
+                self.boutonsChiffres[i+6].config(state=DISABLED)
+        if(not self.nextOp):
+            self.boutonValider['command'] = self.resetRegen
+            self.boutonValider['text'] = "Valider"
     
     def reset(self):
         for i in range(6*2):
@@ -145,6 +198,13 @@ class Application(Frame):
     
     def trueReset(self, fInfos):
         fInfos.destroy()
+        self.reset()
+        self.generate()
+        
+    def resetRegen(self):
+        self.boutonAbandonner.config(state=NORMAL)
+        self.boutonRetour.config(state=NORMAL)
+        self.boutonValider['command'] = self.valider
         self.reset()
         self.generate()
     
